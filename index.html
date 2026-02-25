@@ -23,14 +23,13 @@
     /* ==================== */
     .page-character {
       background-image: url("img/backimg.png");
-      background-size: auto;
+      background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      min-height: 100vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 300px;
     }
 
     .page-character.hidden {
@@ -46,6 +45,7 @@
 
     .grid-container {
       display: grid;
+      padding-top: 100px;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       width: 100%;
