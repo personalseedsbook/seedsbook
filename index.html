@@ -1,0 +1,914 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>씨앗 책방</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background-color: #fdf6e3;
+      min-height: 100vh;
+    }
+
+    /* ==================== */
+    /* 페이지 1: 캐릭터 선택 */
+    /* ==================== */
+    .page-character {
+      background-image: url("img/backimg.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 200px;
+    }
+
+    .page-character.hidden {
+      display: none;
+    }
+
+    .page-character h1 {
+      color: #fff;
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 1.8rem;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .character-card {
+      aspect-ratio: 469 / 468;
+      cursor: pointer;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: #e07a5a;
+    }
+
+    .character-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      z-index: 1;
+    }
+
+    .character-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .character-card .name {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+      color: #fff;
+      padding: 20px 10px 10px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    /* 팝업 오버레이 */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .popup-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .popup-content {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      max-width: 90%;
+      width: 350px;
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .popup-content img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+      border: 4px solid #4a90d9;
+    }
+
+    .popup-content h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .btn-confirm {
+      background: #4a90d9;
+      color: #fff;
+    }
+
+    .btn-cancel {
+      background: #ddd;
+      color: #333;
+    }
+
+    /* ==================== */
+    /* 페이지 2: 설문지 */
+    /* ==================== */
+    .page-survey {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 60px;
+      background-image: url("img/backimg.png");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .page-survey.active {
+      display: flex;
+    }
+
+    .survey-container {
+      width: 100%;
+      max-width: 500px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 2px solid #000;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .header-title {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      color: #ff8b6a;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 0px #fff, 4px 4px 0px rgba(0,0,0,0.1);
+    }
+
+    .selected-character-info {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff5e6;
+      border-radius: 10px;
+      border: 1px solid #ffcc99;
+    }
+
+    .selected-character-info img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      border: 3px solid #ff8b6a;
+    }
+
+    .selected-character-info p {
+      color: #333;
+      font-weight: bold;
+    }
+
+    .survey-container table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .survey-container th,
+    .survey-container td {
+      border: 1.5px solid #000;
+      padding: 10px;
+    }
+
+    .survey-container th {
+      background-color: #ffe4c4;
+      width: 30%;
+      font-weight: bold;
+    }
+
+    .category-title {
+      background-color: #ffe4c4;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .survey-container textarea {
+      width: 95%;
+      height: 50px;
+      border: none;
+      resize: none;
+      outline: none;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .checkbox-group {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 0.9rem;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border: 1.5px solid #000;
+      border-top: none;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .info-row label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .info-row input {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      outline: none;
+      width: 80px;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 15px;
+      color: #d35400;
+      font-weight: bold;
+    }
+
+    .btn-back-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn-back {
+      background: #888;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-back:hover {
+      background: #666;
+    }
+
+    /* 설문지 탭 */
+    .survey-tab {
+      display: block;
+    }
+
+    .survey-tab.hidden {
+      display: none;
+    }
+
+    .survey-tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .survey-tab-btn {
+      padding: 10px 25px;
+      border: 2px solid #ff8b6a;
+      border-radius: 20px;
+      background: #fff;
+      color: #ff8b6a;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .survey-tab-btn:hover {
+      background: #fff5e6;
+    }
+
+    .survey-tab-btn.active {
+      background: #ff8b6a;
+      color: #fff;
+    }
+
+    .btn-submit-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn-submit {
+      background: #ff8b6a;
+      color: #fff;
+      padding: 15px 40px;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .btn-submit:hover {
+      background: #e07a5a;
+    }
+
+    .btn-submit:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* 로딩 오버레이 */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2000;
+    }
+
+    .loading-overlay.active {
+      display: flex;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid #ffe4c4;
+      border-top: 5px solid #ff8b6a;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      color: #ff8b6a;
+      font-size: 1.2rem;
+      font-weight: bold;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .loading-dots {
+      display: inline-block;
+    }
+
+    .loading-dots::after {
+      content: '';
+      animation: dots 1.5s steps(4, end) infinite;
+    }
+
+    @keyframes dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
+    }
+
+    /* 결과 페이지 */
+    .page-result {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 60px;
+      background-image: url("img/backimgfinal.jpg");
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .page-result.active {
+      display: flex;
+    }
+
+    .result-content {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .result-section {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed #ccc;
+    }
+
+    .result-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .result-label {
+      font-weight: bold;
+      color: #ff8b6a;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color: #333;
+      padding: 5px 0;
+    }
+
+    .result-character {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .result-character img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #ff8b6a;
+    }
+
+    /* 모바일 반응형 */
+    @media (max-width: 480px) {
+      .page-character {
+        padding: 10px;
+      }
+
+      .page-character h1 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+      }
+
+      .grid-container {
+        gap: 6px;
+      }
+
+      .character-card {
+        border-radius: 8px;
+      }
+
+      .character-card .name {
+        font-size: 0.75rem;
+        padding: 15px 5px 5px;
+      }
+
+      .popup-content {
+        padding: 20px;
+        width: 300px;
+      }
+
+      .popup-content img {
+        width: 120px;
+        height: 120px;
+      }
+
+      /* 설문지 모바일 */
+      .page-survey {
+        padding: 10px;
+      }
+
+      .survey-container {
+        padding: 15px;
+      }
+
+      .header-title {
+        font-size: 28px;
+      }
+
+      .survey-container th,
+      .survey-container td {
+        padding: 8px;
+        font-size: 0.85rem;
+      }
+
+      .checkbox-group label {
+        font-size: 0.8rem;
+      }
+
+      .info-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .info-row input {
+        width: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- 페이지 1: 캐릭터 선택 -->
+<div class="page-character" id="pageCharacter">
+  <div class="grid-container" id="characterGrid">
+    <!-- 캐릭터 카드들이 JavaScript로 생성됩니다 -->
+  </div>
+</div>
+
+<!-- 페이지 2: 설문지 -->
+<div class="page-survey" id="pageSurvey">
+  <div class="survey-container">
+    <div class="header-title">씨앗 책방</div>
+
+    <!-- 체크지 1 -->
+    <div class="survey-tab" id="surveyTab1">
+      <!-- 선택된 캐릭터 표시 -->
+      <div class="selected-character-info">
+        <img id="surveyCharImage" src="" alt="선택한 캐릭터">
+        <p>선택한 캐릭터: <span id="surveyCharName"></span></p>
+      </div>
+      <table>
+        <tr>
+          <th>책 선호도</th>
+          <td>
+            <div class="checkbox-group">
+              <label><input type="radio" name="preference" value="GOOD"> GOOD</label>
+              <label><input type="radio" name="preference" value="SOSO"> SOSO</label>
+              <label><input type="radio" name="preference" value="BAD"> BAD</label>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <th>책에 대한 인식</th>
+          <td><textarea id="bookPerception"></textarea></td>
+        </tr>
+
+        <tr>
+          <th>인생책<br>/ 최근 읽은 책</th>
+          <td><textarea id="favoriteBook"></textarea></td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 체크지 2 -->
+    <div class="survey-tab hidden" id="surveyTab2">
+      <table>
+        <tr>
+          <td colspan="2" class="category-title">선호하는 카테고리</td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <div class="checkbox-group">
+              <label><input type="checkbox" value="인문/고전"> 인문/고전</label>
+              <label><input type="checkbox" value="과학"> 과학</label>
+              <label><input type="checkbox" value="경제/경영/사회"> 경제/경영/사회</label>
+              <label><input type="checkbox" value="에세이"> 에세이</label>
+              <label><input type="checkbox" value="만화"> 만화</label>
+              <label><input type="checkbox" value="잡지"> 잡지</label>
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td colspan="2" class="category-title">취미생활 / 해보고 싶은 활동</td>
+        </tr>
+        <tr>
+          <td colspan="2"><textarea id="hobby" style="height: 80px;"></textarea></td>
+        </tr>
+
+        <tr>
+          <th>추후 참여 활동</th>
+          <td>
+            <div class="checkbox-group">
+              <label><input type="radio" name="participation" value="1회"> 1회</label>
+              <label><input type="radio" name="participation" value="3회"> 3회</label>
+              <label><input type="radio" name="participation" value="10회"> 10회</label>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="info-row">
+        <label>이름: <input type="text" id="userName"></label>
+        <label>나이: <input type="text" id="userAge"></label>
+        <label>MBTI: <input type="text" id="userMbti"></label>
+      </div>
+
+      <div class="btn-submit-container">
+        <button type="button" class="btn btn-submit" id="submitBtn" onclick="submitSurvey()">제출하기</button>
+      </div>
+    </div>
+
+    <!-- 탭 네비게이션 -->
+    <div class="survey-tab-nav">
+      <button class="survey-tab-btn active" onclick="switchSurveyTab(1)">체크지 1</button>
+      <button class="survey-tab-btn" onclick="switchSurveyTab(2)">체크지 2</button>
+    </div>
+
+    <div class="footer-note">
+      &lt; 참여시 자체 제작 굿즈 제공 &gt;
+    </div>
+  </div>
+</div>
+
+<!-- 로딩 오버레이 -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">제출 중<span class="loading-dots"></span></div>
+</div>
+
+<!-- 페이지 3: 제출 결과 -->
+<div class="page-result" id="pageResult">
+  <div class="survey-container">
+    <div class="header-title">제출 완료</div>
+
+    <div class="result-content" id="resultContent">
+      <!-- JavaScript로 결과가 표시됩니다 -->
+    </div>
+
+    <div class="btn-back-container">
+      <button class="btn btn-back" onclick="resetAll()">처음으로</button>
+    </div>
+  </div>
+</div>
+
+<!-- 투표 확인 팝업 -->
+<div class="popup-overlay" id="popup">
+  <div class="popup-content">
+    <img id="popupImage" src="" alt="캐릭터">
+    <h2>이 캐릭터에 투표하시겠습니까?</h2>
+    <div class="popup-buttons">
+      <button class="btn btn-cancel" onclick="closePopup()">취소</button>
+      <button class="btn btn-confirm" onclick="confirmVote()">투표</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 캐릭터 데이터 (실제 이미지 경로로 변경하세요)
+  const characters = [
+    { id: 1, name: '현미', image: 'img/brown_rice.png' },
+    { id: 2, name: '완두', image: 'img/pea.png' },
+    { id: 3, name: '백미', image: 'img/white_rice.png' },
+    { id: 4, name: '흑미', image: 'img/black_rice.png' },
+    { id: 5, name: '렌틸콩', image: 'img/lentils.png' },
+    { id: 6, name: '보리', image: 'img/barley.png' },
+    { id: 7, name: '옥수수', image: 'img/corner.png' },
+    { id: 8, name: '강낭콩', image: 'img/kidney_bean.png' },
+    { id: 9, name: '백미찹쌀', image: 'img/white_glutinous.png' }
+  ];
+
+  let selectedCharacter = null;
+
+  // 캐릭터 그리드 생성
+  function createGrid() {
+    const grid = document.getElementById('characterGrid');
+
+    characters.forEach(char => {
+      const card = document.createElement('div');
+      card.className = 'character-card';
+      card.onclick = () => showVotePopup(char);
+      card.innerHTML = `<img src="${char.image}" alt="${char.name}">`;
+      grid.appendChild(card);
+    });
+  }
+
+  // 투표 팝업 표시
+  function showVotePopup(character) {
+    selectedCharacter = character;
+    document.getElementById('popupImage').src = character.image;
+    document.getElementById('popup').classList.add('active');
+  }
+
+  // 팝업 닫기
+  function closePopup() {
+    document.getElementById('popup').classList.remove('active');
+    selectedCharacter = null;
+  }
+
+  // 투표 확인 - 설문지 화면으로 이동
+  function confirmVote() {
+    if (selectedCharacter) {
+      // 설문지에 선택된 캐릭터 정보 표시
+      document.getElementById('surveyCharImage').src = selectedCharacter.image;
+      document.getElementById('surveyCharName').textContent = selectedCharacter.name;
+
+      // 화면 전환
+      document.getElementById('popup').classList.remove('active');
+      document.getElementById('pageCharacter').classList.add('hidden');
+      document.getElementById('pageSurvey').classList.add('active');
+    }
+  }
+
+  // 캐릭터 선택 화면으로 돌아가기
+  function goBack() {
+    document.getElementById('pageSurvey').classList.remove('active');
+    document.getElementById('pageCharacter').classList.remove('hidden');
+    selectedCharacter = null;
+  }
+
+  // 설문지 탭 전환
+  function switchSurveyTab(tabNum) {
+    // 모든 탭 숨기기
+    document.getElementById('surveyTab1').classList.add('hidden');
+    document.getElementById('surveyTab2').classList.add('hidden');
+
+    // 선택된 탭 보이기
+    document.getElementById('surveyTab' + tabNum).classList.remove('hidden');
+
+    // 버튼 활성화 상태 변경
+    document.querySelectorAll('.survey-tab-btn').forEach((btn, index) => {
+      if (index === tabNum - 1) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  // 설문지 제출
+  function submitSurvey() {
+    // 버튼 비활성화
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.disabled = true;
+
+    // 로딩 오버레이 표시
+    document.getElementById('loadingOverlay').classList.add('active');
+
+    // 2초 후 결과 화면으로 전환
+    setTimeout(() => {
+      // 입력값 수집
+      const preference = document.querySelector('input[name="preference"]:checked');
+      const bookPerception = document.getElementById('bookPerception').value;
+      const favoriteBook = document.getElementById('favoriteBook').value;
+
+      const categories = [];
+      document.querySelectorAll('#surveyTab2 input[type="checkbox"]:checked').forEach(cb => {
+        categories.push(cb.value);
+      });
+
+      const hobby = document.getElementById('hobby').value;
+      const participation = document.querySelector('input[name="participation"]:checked');
+
+      const userName = document.getElementById('userName').value;
+      const userAge = document.getElementById('userAge').value;
+      const userMbti = document.getElementById('userMbti').value;
+
+      // 결과 HTML 생성
+      let resultHTML = `
+        <div class="result-character">
+          <img src="${selectedCharacter.image}" alt="${selectedCharacter.name}">
+          <p><strong>선택한 캐릭터: ${selectedCharacter.name}</strong></p>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">책 선호도</div>
+          <div class="result-value">${preference ? preference.value : '미선택'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">책에 대한 인식</div>
+          <div class="result-value">${bookPerception || '미입력'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">인생책 / 최근 읽은 책</div>
+          <div class="result-value">${favoriteBook || '미입력'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">선호하는 카테고리</div>
+          <div class="result-value">${categories.length > 0 ? categories.join(', ') : '미선택'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">취미생활 / 해보고 싶은 활동</div>
+          <div class="result-value">${hobby || '미입력'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">추후 참여 활동</div>
+          <div class="result-value">${participation ? participation.value : '미선택'}</div>
+        </div>
+
+        <div class="result-section">
+          <div class="result-label">이름 / 나이 / MBTI</div>
+          <div class="result-value">${userName || '미입력'} / ${userAge || '미입력'} / ${userMbti || '미입력'}</div>
+        </div>
+      `;
+
+      document.getElementById('resultContent').innerHTML = resultHTML;
+
+      // 로딩 오버레이 숨기기
+      document.getElementById('loadingOverlay').classList.remove('active');
+
+      // 화면 전환
+      document.getElementById('pageSurvey').classList.remove('active');
+      document.getElementById('pageResult').classList.add('active');
+
+      // 버튼 다시 활성화
+      submitBtn.disabled = false;
+    }, 2000);
+  }
+
+  // 처음으로 돌아가기
+  function resetAll() {
+    // 모든 입력 초기화
+    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+    document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+
+    // 탭 초기화
+    switchSurveyTab(1);
+
+    // 화면 전환
+    document.getElementById('pageResult').classList.remove('active');
+    document.getElementById('pageCharacter').classList.remove('hidden');
+    selectedCharacter = null;
+  }
+
+  // 팝업 외부 클릭 시 닫기
+  document.getElementById('popup').addEventListener('click', function(e) {
+    if (e.target === this) {
+      closePopup();
+    }
+  });
+
+  // 초기화
+  createGrid();
+</script>
+</body>
+</html>
