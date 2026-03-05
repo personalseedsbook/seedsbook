@@ -1,0 +1,392 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>씨앗 책방 - 캐릭터 투표</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nanum Gothic', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background: #1a1a1a;
+    }
+
+    /* ── 16:9 캔버스 ── */
+    .canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(100vw, 177.78vh);   /* 16:9 */
+      height: min(56.25vw, 100vh);  /* 16:9 */
+      background-image: url("img/tabimg.png");
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+    }
+
+    /* ── 전체 화면 레이아웃 ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── 캐릭터 선택 화면 ── */
+    #screenSelect {
+      padding: 2% 3%;
+    }
+
+
+    .sub-title {
+      font-size: clamp(16px, 3.5vh, 36px);
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 2.5%;
+    }
+
+    /* 3×3 그리드 */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: clamp(6px, 1.2vh, 14px);
+      width: min(75vh, 88%);   /* 정사각형 그리드 유지 */
+      aspect-ratio: 1 / 1;
+    }
+
+    .char-card {
+      position: relative;
+      cursor: pointer;
+      border-radius: clamp(6px, 1vh, 12px);
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      background-color: #eeeeee;
+      /*background: rgba(255,255,255,0.1);*/
+      border: 2px solid rgba(255,255,255,0.25);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .char-card:hover {
+      transform: scale(1.07);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.55);
+      border-color: rgba(255,200,100,0.7);
+      z-index: 1;
+    }
+
+    .char-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .char-card .name-badge {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 18% 4% 5%;
+      background: linear-gradient(transparent, rgba(0,0,0,0.72));
+      color: #fff;
+      text-align: center;
+      font-weight: 700;
+      font-size: clamp(9px, 1.4vh, 16px);
+    }
+
+    /* ── 팝업 오버레이 ── */
+    .popup-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.72);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .popup-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── 확인 팝업 ── */
+    .popup-confirm {
+      background: #fff;
+      border-radius: clamp(10px, 2vh, 20px);
+      padding: clamp(18px, 3vh, 36px) clamp(24px, 4vw, 48px);
+      text-align: center;
+      animation: slideUp 0.25s ease;
+      max-width: 36%;
+      min-width: 260px;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .popup-confirm .char-img {
+      width: clamp(70px, 12vh, 130px);
+      height: clamp(70px, 12vh, 130px);
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #ff8b6a;
+      margin-bottom: 2vh;
+    }
+
+    .popup-confirm h2 {
+      font-size: clamp(13px, 2.2vh, 22px);
+      color: #333;
+      margin-bottom: 0.8vh;
+    }
+
+    .popup-confirm .char-name {
+      font-size: clamp(14px, 2.5vh, 24px);
+      font-weight: 900;
+      color: #ff8b6a;
+      margin-bottom: 2.5vh;
+    }
+
+    .popup-confirm p {
+      font-size: clamp(10px, 1.6vh, 16px);
+      color: #666;
+      margin-bottom: 2.5vh;
+      line-height: 1.5;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: clamp(8px, 1.5vw, 20px);
+      justify-content: center;
+    }
+
+    .btn {
+      padding: clamp(8px, 1.3vh, 14px) clamp(18px, 2.5vw, 32px);
+      border: none;
+      border-radius: 40px;
+      font-size: clamp(11px, 1.8vh, 18px);
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+
+    .btn-cancel {
+      background: #eee;
+      color: #555;
+    }
+
+    .btn-ok {
+      background: #ff8b6a;
+      color: #fff;
+    }
+
+    /* ── 감사 화면 ── */
+    .popup-thanks {
+      background: #fff;
+      border-radius: clamp(10px, 2vh, 20px);
+      padding: clamp(22px, 4vh, 50px) clamp(28px, 5vw, 60px);
+      text-align: center;
+      animation: slideUp 0.3s ease;
+      max-width: 46%;
+      min-width: 280px;
+    }
+
+    .thanks-char-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 2.5vh;
+    }
+
+    .thanks-char-wrap img {
+      width: clamp(80px, 14vh, 150px);
+      height: clamp(80px, 14vh, 150px);
+      object-fit: cover;
+      border-radius: 50%;
+      border: 4px solid #ff8b6a;
+      display: block;
+    }
+
+    .thanks-char-wrap .badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      background: #ff8b6a;
+      color: #fff;
+      border-radius: 20px;
+      padding: 2px 10px;
+      font-size: clamp(9px, 1.3vh, 13px);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .popup-thanks h2 {
+      font-size: clamp(16px, 2.8vh, 30px);
+      font-weight: 900;
+      color: #333;
+      margin-bottom: 1.8vh;
+    }
+
+    .popup-thanks .thanks-msg {
+      font-size: clamp(11px, 1.7vh, 18px);
+      color: #555;
+      line-height: 1.75;
+      margin-bottom: 3vh;
+      word-break: keep-all;
+    }
+
+    .popup-thanks .thanks-msg strong {
+      color: #ff8b6a;
+    }
+
+    .btn-again {
+      background: #ff8b6a;
+      color: #fff;
+    }
+
+    /* 반짝이 효과 */
+    .sparkle {
+      font-size: clamp(18px, 3.5vh, 40px);
+      margin-bottom: 1vh;
+      animation: bounce 0.6s ease infinite alternate;
+      display: block;
+    }
+
+    @keyframes bounce {
+      from { transform: scale(1); }
+      to   { transform: scale(1.15); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="canvas" id="canvas">
+
+  <!-- ① 캐릭터 선택 화면 -->
+  <div class="screen" id="screenSelect">
+    <div class="sub-title">마음에 드는 캐릭터를 선택해주세요</div>
+
+    <div class="grid" id="charGrid">
+      <!-- JS 생성 -->
+    </div>
+  </div>
+
+  <!-- ② 확인 팝업 -->
+  <div class="popup-overlay" id="popupConfirm">
+    <div class="popup-confirm">
+      <img class="char-img" id="confirmImg" src="" alt="">
+      <div class="char-name" id="confirmName"></div>
+      <h2>이 캐릭터에 투표하시겠습니까?</h2>
+      <div class="btn-row">
+        <button class="btn btn-cancel" onclick="closeConfirm()">취소</button>
+        <button class="btn btn-ok"     onclick="doVote()">투표하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 감사 팝업 -->
+  <div class="popup-overlay" id="popupThanks">
+    <div class="popup-thanks">
+      <span class="sparkle">🌱</span>
+      <div class="thanks-char-wrap">
+        <img id="thanksImg" src="" alt="">
+        <div class="badge" id="thanksName"></div>
+      </div>
+      <h2>투표해 주셔서 감사합니다!</h2>
+      <p class="thanks-msg">
+        진행되는 이벤트에 참여해 주시면<br>
+        <strong>추첨을 통해 굿즈</strong>를 제공하고 있습니다.<br>
+        많은 참여 부탁드려요 ☺
+      </p>
+      <div class="btn-row">
+        <button class="btn btn-again" onclick="closeThanks()">처음으로 돌아가기</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const characters = [
+    { id: 1, name: '현미',    image: 'img/brown_rice.png' },
+    { id: 2, name: '완두',    image: 'img/pea.png' },
+    { id: 3, name: '백미',    image: 'img/white_rice.png' },
+    { id: 4, name: '흑미',    image: 'img/black_rice.png' },
+    { id: 5, name: '렌틸콩',  image: 'img/lentils.png' },
+    { id: 6, name: '보리',    image: 'img/barley.png' },
+    { id: 7, name: '옥수수',  image: 'img/corner.png' },
+    { id: 8, name: '강낭콩',  image: 'img/kidney_bean.png' },
+    { id: 9, name: '백미찹쌀',image: 'img/white_glutinous.png' }
+  ];
+
+  let pending = null;
+
+  // 그리드 생성
+  const grid = document.getElementById('charGrid');
+  characters.forEach(c => {
+    const card = document.createElement('div');
+    card.className = 'char-card';
+    card.innerHTML = `
+      <img src="${c.image}" alt="${c.name}">
+      <div class="name-badge">${c.name}</div>
+    `;
+    card.addEventListener('click', () => openConfirm(c));
+    grid.appendChild(card);
+  });
+
+  function openConfirm(char) {
+    pending = char;
+    document.getElementById('confirmImg').src  = char.image;
+    document.getElementById('confirmName').textContent = char.name;
+    document.getElementById('popupConfirm').classList.add('active');
+  }
+
+  function closeConfirm() {
+    document.getElementById('popupConfirm').classList.remove('active');
+    pending = null;
+  }
+
+  function doVote() {
+    if (!pending) return;
+    document.getElementById('thanksImg').src = pending.image;
+    document.getElementById('thanksName').textContent = pending.name;
+    document.getElementById('popupConfirm').classList.remove('active');
+    document.getElementById('popupThanks').classList.add('active');
+    pending = null;
+  }
+
+  function closeThanks() {
+    document.getElementById('popupThanks').classList.remove('active');
+  }
+
+  // 팝업 바깥 클릭 시 닫기
+  document.getElementById('popupConfirm').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeConfirm();
+  });
+  document.getElementById('popupThanks').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeThanks();
+  });
+</script>
+</body>
+</html>
