@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>씨앗 책방 - 캐릭터 투표</title>
@@ -390,6 +393,18 @@
   document.getElementById('popupThanks').addEventListener('click', e => {
     if (e.target === e.currentTarget) closeThanks();
   });
+
+  function enterFullscreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen)            el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); // Safari/iOS
+    else if (el.mozRequestFullScreen)    el.mozRequestFullScreen();
+  }
+
+  // 첫 터치/클릭 시 전체화면 진입
+  document.addEventListener('click',     enterFullscreen, { once: true });
+  document.addEventListener('touchstart', enterFullscreen, { once: true });
+
 </script>
 </body>
 </html>
