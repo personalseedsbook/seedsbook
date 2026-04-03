@@ -722,15 +722,15 @@
 <script>
   // 캐릭터 데이터 (실제 이미지 경로로 변경하세요)
   const characters = [
-    { id: 1, name: '현미', image: 'img/brown_rice.png' },
-    { id: 2, name: '완두', image: 'img/pea.png' },
-    { id: 3, name: '백미', image: 'img/white_rice.png' },
-    { id: 4, name: '흑미', image: 'img/black_rice.png' },
-    { id: 5, name: '렌틸콩', image: 'img/lentils.png' },
-    { id: 6, name: '보리', image: 'img/barley.png' },
-    { id: 7, name: '옥수수', image: 'img/corner.png' },
-    { id: 8, name: '강낭콩', image: 'img/kidney_bean.png' },
-    { id: 9, name: '백미찹쌀', image: 'img/white_glutinous.png' }
+    { id: 1, name: '현미', image: 'img/brown_rice.jpeg' },
+    { id: 2, name: '완두', image: 'img/pea.jpeg' },
+    { id: 3, name: '백미', image: 'img/white_rice.jpeg' },
+    { id: 4, name: '흑미', image: 'img/black_rice.jpeg' },
+    { id: 5, name: '렌틸콩', image: 'img/lentils.jpeg' },
+    { id: 6, name: '보리', image: 'img/barley.jpeg' },
+    { id: 7, name: '옥수수', image: 'img/corner.jpeg' },
+    { id: 8, name: '강낭콩', image: 'img/kidney_bean.jpeg' },
+    { id: 9, name: '백미찹쌀', image: 'img/white_glutinous.jpeg' }
   ];
 
   let selectedCharacter = null;
@@ -764,6 +764,12 @@
   // 투표 확인 - 설문지 화면으로 이동
   function confirmVote() {
     if (selectedCharacter) {
+      document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('textarea').forEach(ta => ta.value = '');
+      document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
+      switchSurveyTab(1);
+
       // 설문지에 선택된 캐릭터 정보 표시
       document.getElementById('surveyCharImage').src = selectedCharacter.image;
       document.getElementById('surveyCharName').textContent = selectedCharacter.name;
@@ -888,12 +894,6 @@
 
   // 처음으로 돌아가기
   function resetAll() {
-    // 모든 입력 초기화
-    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
-    document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-    document.querySelectorAll('textarea').forEach(ta => ta.value = '');
-    document.querySelectorAll('input[type="text"]').forEach(input => input.value = '');
-
     // 탭 초기화
     switchSurveyTab(1);
 
