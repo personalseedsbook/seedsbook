@@ -181,6 +181,12 @@
       gap: 6px;
       z-index: 20;
       pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .survey-char-float.hidden-char {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .survey-char-float img {
@@ -604,7 +610,7 @@
 <div class="page hidden" id="pageSurvey">
 
   <!-- 상단 40% 캐릭터 플로팅 -->
-  <div class="survey-char-float">
+  <div class="survey-char-float" id="surveyCharFloat">
     <img id="surveyCharImg" src="" alt="">
     <span id="surveyCharName"></span>
   </div>
@@ -905,13 +911,18 @@
   function updateNav() {
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const charFloat = document.getElementById('surveyCharFloat');
+
     prevBtn.style.display = currentQ > 0 ? 'block' : 'none';
+
     if (currentQ === TOTAL_Q - 1) {
       nextBtn.textContent = '제출하기 ✓';
       nextBtn.classList.add('submit-mode');
+      charFloat.classList.add('hidden-char');
     } else {
       nextBtn.textContent = '다음 →';
       nextBtn.classList.remove('submit-mode');
+      charFloat.classList.remove('hidden-char');
     }
   }
 
