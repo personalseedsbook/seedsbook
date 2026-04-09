@@ -47,11 +47,11 @@
 
     /* 투표 로딩 */
     #pageVoteLoading { z-index: 800; }
-    .vote-loading-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid var(--c); animation: floatBob 1.5s ease-in-out infinite; }
+    .vote-loading-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid var(--c); animation: floatBob 1s ease-in-out infinite; }
     @keyframes floatBob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
     .vote-loading-name { font-size: 1.25rem; font-weight: bold; color: var(--c); text-align: center; }
     .vote-loading-bar-wrap { width: 200px; height: 6px; background: var(--cl); border-radius: 3px; overflow: hidden; }
-    .vote-loading-bar { height: 100%; width: 0; background: linear-gradient(90deg,#ffb89a,var(--c)); border-radius: 3px; transition: width 1s ease-out; }
+    .vote-loading-bar { height: 100%; width: 0; background: linear-gradient(90deg,#ffb89a,var(--c)); border-radius: 3px; transition: width 300ms ease-out; }
     .vote-loading-sub { font-size: 0.85rem; color: #bbb; }
 
     /* ===== 설문지 ===== */
