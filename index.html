@@ -138,6 +138,7 @@
     .result-title { font-size: 1.5rem; font-weight: bold; color: var(--c); }
     .result-sub { color: #aaa; font-size: 0.88rem; margin-top: 4px; }
     .result-list { display: flex; flex-direction: column; gap: 10px; }
+    .res-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .res-card { background: #fff; border-radius: 14px; padding: 14px 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-left: 4px solid var(--c); }
     .res-label { font-size: 0.72rem; font-weight: bold; color: var(--c); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
     .res-value { color: #333; font-size: 0.97rem; line-height: 1.5; }
@@ -240,7 +241,7 @@
       <!-- Q5: 취미생활 -->
       <div class="q-slide">
         <div class="q-card">
-          <div class="q-title"> 취미 / 해보고 싶은 활동이 있나요?</div>
+          <div class="q-title">가지고 계신 취미 / 해보고 싶은 활동이 있나요?</div>
           <textarea class="q-textarea" id="hobby" placeholder="공간 활용을 위한 질문입니다 🎯"></textarea>
         </div>
       </div>
@@ -410,20 +411,21 @@
     $('resultCharImg').src = selectedChar.image;
     $('resultSub').textContent = `${selectedChar.name} 캐릭터로 참여해주셨습니다`;
     const cats = [...data.categories];
-    const rows = [
-      ['책 선호도',              data.preference],
-      ['책에 대한 인식',          $('bookPerception').value],
-      ['인생책 / 최근 읽은 책',   $('favoriteBook').value],
-      ['선호 카테고리',           cats.length ? cats.join(', ') : ''],
-      ['취미 / 해보고 싶은 활동', $('hobby').value],
-      ['추후 참여 횟수',          data.participation],
-      ['이름',                    $('userName').value],
-      ['나이',                    `${userAge}세`],
-      ['MBTI',                    $('userMbti').value],
+    const card = ([label, value]) =>
+      `<div class="res-card"><div class="res-label">${label}</div><div class="res-value">${value || '미입력'}</div></div>`;
+    const grid = [
+      ['책 선호도',            data.preference],
+      ['책에 대한 인식',        $('bookPerception').value],
+      ['인생책/최근 읽은 책',   $('favoriteBook').value],
+      ['선호 카테고리',         cats.length ? cats.join(', ') : ''],
+      ['추후 참여 횟수',        data.participation],
+      ['이름',                  $('userName').value],
+      ['나이',                  `${userAge}세`],
+      ['MBTI',                  $('userMbti').value],
     ];
-    $('resultList').innerHTML = rows.map(([label, value]) =>
-      `<div class="res-card"><div class="res-label">${label}</div><div class="res-value">${value || '미입력'}</div></div>`
-    ).join('');
+    $('resultList').innerHTML =
+      `<div class="res-grid">${grid.map(card).join('')}</div>` +
+      card(['취미/해보고 싶은 활동', $('hobby').value]);
     hidePage('pageSurvey'); showPage('pageResult');
     requestAnimationFrame(() => {
       const wrap = $('pageResult').querySelector('.result-wrap');
