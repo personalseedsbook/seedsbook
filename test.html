@@ -447,16 +447,16 @@
     const card = ([label, value]) =>
       `<div class="res-card"><div class="res-label">${label}</div><div class="res-value">${value || '미입력'}</div></div>`;
     const grid = [
-      ['책 선호도',            data.preference],
-      ['책에 대한 인식',        data.bookThought],
-      ['책을 접한 계기',        data.bookTrigger],
-      ['선호 카테고리',         cats.length ? cats.join(', ') : ''],
-      ['추후 참여 횟수',        data.participation],
-      ['이름',                  $('userName').value],
-      ['나이',                  `${userAge}세`],
-      ['MBTI',                  $('userMbti').value],
+      ['책 선호도',    data.preference],
+      ['선호 카테고리', cats.length ? cats.join(', ') : ''],
+      ['추후 참여 횟수', data.participation],
+      ['이름',          $('userName').value],
+      ['나이',          `${userAge}세`],
+      ['MBTI',          $('userMbti').value],
     ];
     $('resultList').innerHTML =
+      card(['책에 대한 인식', data.bookThought]) +
+      card(['책을 접한 계기', data.bookTrigger]) +
       `<div class="res-grid">${grid.map(card).join('')}</div>` +
       card(['취미/해보고 싶은 활동', $('hobby').value]);
     hidePage('pageSurvey'); showPage('pageResult');
