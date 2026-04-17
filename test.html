@@ -214,12 +214,12 @@
       <div class="q-slide">
         <div class="q-card">
           <div class="q-title">책에 대해 어떻게 생각하시나요?</div>
-          <div class="list-opts" id="q2opts">
-            <div class="list-card sel-card" onclick="selectList(this,'bookThought','지식을 쌓을 수 있다','q2etc')">지식을 쌓을 수 있다</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookThought','재밌다','q2etc')">재밌다</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookThought','지루하다','q2etc')">지루하다</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookThought','별 생각없다','q2etc')">별 생각없다</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookThought',null,'q2etc')">기타</div>
+          <div class="cat-grid" id="q2opts">
+            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','지식을 쌓을 수 있다','q2etc')">지식을 쌓을 수 있다</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','재밌다','q2etc')">재밌다</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','지루하다','q2etc')">지루하다</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','별 생각없다','q2etc')">별 생각없다</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookThought',null,'q2etc')" style="grid-column:span 2">기타</div>
           </div>
           <textarea class="q-textarea" id="q2etc" placeholder="직접 입력해주세요 ✍️" style="display:none;margin-top:10px;"></textarea>
         </div>
@@ -229,12 +229,12 @@
       <div class="q-slide">
         <div class="q-card">
           <div class="q-title">최근에 책을 접하게 된 계기는?</div>
-          <div class="list-opts" id="q3opts">
-            <div class="list-card sel-card" onclick="selectList(this,'bookTrigger','지인 추천','q3etc')">지인 추천</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookTrigger','베스트셀러','q3etc')">베스트셀러</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookTrigger','추천도서','q3etc')">추천도서</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookTrigger','서점 방문','q3etc')">서점 방문</div>
-            <div class="list-card sel-card" onclick="selectList(this,'bookTrigger',null,'q3etc')">기타</div>
+          <div class="cat-grid" id="q3opts">
+            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','지인 추천','q3etc')">지인 추천</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','베스트셀러','q3etc')">베스트셀러</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','추천도서','q3etc')">추천도서</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','서점 방문','q3etc')">서점 방문</div>
+            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger',null,'q3etc')" style="grid-column:span 2">기타</div>
           </div>
           <textarea class="q-textarea" id="q3etc" placeholder="직접 입력해주세요 ✍️" style="display:none;margin-top:10px;"></textarea>
         </div>
@@ -409,7 +409,7 @@
 
   // 선택 핸들러
   function selectList(el, field, value, etcId) {
-    el.closest('.list-opts').querySelectorAll('.list-card').forEach(c => c.classList.remove('selected'));
+    el.closest('.cat-grid').querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     const etcEl = $(etcId);
     const isEtc = value === null;
