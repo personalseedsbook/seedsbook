@@ -22,7 +22,7 @@
     .bg-cover { background: url("img/backimg2.png") center/cover no-repeat; }
 
     /* ===== 페이지 1: 캐릭터 ===== */
-    #pageCharacter { justify-content: flex-end; padding: 0 12px 20vh; }
+    #pageCharacter { justify-content: flex-end; padding: 0 12px 6vh; }
     .grid-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; width: 100%; max-width: 480px; }
     .character-card { aspect-ratio: 1; cursor: pointer; border-radius: 14px; overflow: hidden; background: var(--cd); transition: transform 0.25s ease, box-shadow 0.25s ease; }
     .character-card:hover  { transform: scale(1.06); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
@@ -57,9 +57,9 @@
     /* ===== 설문지 ===== */
     #pageSurvey { justify-content: flex-start; }
 
-    .survey-char-float { position: fixed; top: 30%; left: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 20; pointer-events: none; transition: opacity 0.3s ease; }
+    .survey-char-float { position: fixed; top: 40%; left: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 20; pointer-events: none; transition: opacity 0.3s ease; }
     .survey-char-float.hidden-char { opacity: 0; }
-    .survey-char-float img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid var(--c); box-shadow: 0 4px 16px rgba(255,139,106,0.35); }
+    .survey-char-float img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--c); box-shadow: 0 4px 16px rgba(255,139,106,0.35); }
     .survey-char-float span { font-size: 0.8rem; font-weight: bold; color: #fff; background: rgba(255,139,106,0.85); padding: 3px 10px; border-radius: 12px; }
 
     .progress-bar-wrap { width: 100%; padding: 10px 20px 6px; background: rgba(255,255,255,0.8); flex-shrink: 0; }
@@ -91,9 +91,6 @@
     .q-textarea:focus, .info-input:focus { border-color: var(--c); background: #fff; }
     .q-textarea { height: 140px; border-radius: 14px; padding: 14px; font-size: 1rem; resize: none; line-height: 1.6; }
 
-    .list-opts { display: flex; flex-direction: column; gap: 8px; }
-    .list-card { padding: 13px 16px; border-radius: 12px; font-size: 0.95rem; text-align: left; transition: all 0.22s ease; }
-    .list-card.selected { box-shadow: 0 3px 12px rgba(255,139,106,0.4); }
     .cat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
     .cat-card { padding: 14px 10px; border-radius: 14px; font-weight: bold; font-size: 0.88rem; transition: all 0.22s ease; }
     .cat-card.selected { box-shadow: 0 3px 12px rgba(255,139,106,0.4); }
@@ -214,29 +211,15 @@
       <div class="q-slide">
         <div class="q-card">
           <div class="q-title">책에 대해 어떻게 생각하시나요?</div>
-          <div class="cat-grid" id="q2opts">
-            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','지식을 쌓을 수 있다','q2etc')">지식을 쌓을 수 있다</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','재밌다','q2etc')">재밌다</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','지루하다','q2etc')">지루하다</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookThought','별 생각없다','q2etc')">별 생각없다</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookThought',null,'q2etc')" style="grid-column:span 2">기타</div>
-          </div>
-          <textarea class="q-textarea" id="q2etc" placeholder="직접 입력해주세요 ✍️" style="display:none;margin-top:10px;"></textarea>
+          <textarea class="q-textarea" id="bookPerception" placeholder="책에 대한 솔직한 생각을 적어주세요 ✍️"></textarea>
         </div>
       </div>
 
-      <!-- Q3: 책을 접하게 된 계기 -->
+      <!-- Q3: 인생책 / 최근 읽은 책 -->
       <div class="q-slide">
         <div class="q-card">
-          <div class="q-title">최근에 책을 접하게 된 계기는?</div>
-          <div class="cat-grid" id="q3opts">
-            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','지인 추천','q3etc')">지인 추천</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','베스트셀러','q3etc')">베스트셀러</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','추천도서','q3etc')">추천도서</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger','서점 방문','q3etc')">서점 방문</div>
-            <div class="cat-card sel-card" onclick="selectList(this,'bookTrigger',null,'q3etc')" style="grid-column:span 2">기타</div>
-          </div>
-          <textarea class="q-textarea" id="q3etc" placeholder="직접 입력해주세요 ✍️" style="display:none;margin-top:10px;"></textarea>
+          <div class="q-title">인생책 또는 최근 읽은 책이 있나요?</div>
+          <textarea class="q-textarea" id="favoriteBook" placeholder="책 제목을 적어주세요 📚"></textarea>
         </div>
       </div>
 
@@ -335,7 +318,7 @@
 
   const TOTAL_Q = 6;
   let selectedChar = null, currentQ = 0, userAge = 20;
-  const data = { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null };
+  const data = { preference: null, categories: new Set(), participation: null };
 
   // 캐릭터 그리드 생성
   characters.forEach(c => {
@@ -374,11 +357,10 @@
 
   // 설문 초기화
   function initSurvey() {
-    Object.assign(data, { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null });
+    Object.assign(data, { preference: null, categories: new Set(), participation: null });
     userAge = 20;
     document.querySelectorAll('.sel-card').forEach(el => el.classList.remove('selected'));
-    ['q2etc','q3etc','hobby','userName','userMbti'].forEach(id => $(id).value = '');
-    ['q2etc','q3etc'].forEach(id => $(id).style.display = 'none');
+    ['bookPerception','favoriteBook','hobby','userName','userMbti'].forEach(id => $(id).value = '');
     $('ageDisplay').textContent = '20';
     $('surveyCharImg').src = selectedChar.image;
     $('surveyCharName').textContent = selectedChar.name;
@@ -408,21 +390,6 @@
   }
 
   // 선택 핸들러
-  function selectList(el, field, value, etcId) {
-    el.closest('.cat-grid').querySelectorAll('.cat-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    const etcEl = $(etcId);
-    const isEtc = value === null;
-    etcEl.style.display = isEtc ? 'block' : 'none';
-    $('surveyCharFloat').classList.toggle('hidden-char', isEtc);
-    if (isEtc) {
-      data[field] = etcEl.value;
-      etcEl.oninput = () => data[field] = etcEl.value;
-    } else {
-      data[field] = value;
-    }
-  }
-
   function selectOpt(el, field, value) {
     el.closest('.option-row').querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected'); data[field] = value;
@@ -447,16 +414,16 @@
     const card = ([label, value]) =>
       `<div class="res-card"><div class="res-label">${label}</div><div class="res-value">${value || '미입력'}</div></div>`;
     const grid = [
-      ['책 선호도',    data.preference],
-      ['선호 카테고리', cats.length ? cats.join(', ') : ''],
-      ['추후 참여 횟수', data.participation],
-      ['이름',          $('userName').value],
-      ['나이',          `${userAge}세`],
-      ['MBTI',          $('userMbti').value],
+      ['책 선호도',            data.preference],
+      ['책에 대한 인식',        $('bookPerception').value],
+      ['인생책/최근 읽은 책',   $('favoriteBook').value],
+      ['선호 카테고리',         cats.length ? cats.join(', ') : ''],
+      ['추후 참여 횟수',        data.participation],
+      ['이름',                  $('userName').value],
+      ['나이',                  `${userAge}세`],
+      ['MBTI',                  $('userMbti').value],
     ];
     $('resultList').innerHTML =
-      card(['책에 대한 인식', data.bookThought]) +
-      card(['책을 접한 계기', data.bookTrigger]) +
       `<div class="res-grid">${grid.map(card).join('')}</div>` +
       card(['취미/해보고 싶은 활동', $('hobby').value]);
     hidePage('pageSurvey'); showPage('pageResult');
