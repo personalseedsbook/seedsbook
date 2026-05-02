@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>씨앗 책방 모바일 체크지</title>
+  <style>
+    :root {
+      --bg: #f6efe2;
+      --card: #d8d96f;
+      --card2: #eff2a2;
+      --line: #d5c7a0;
+      --text: #3d331f;
+      --accent: #ff7a66;
+      --good: #76b947;
+      --white: #fffdf7;
+      --shadow: 0 10px 24px rgba(87, 70, 34, 0.12);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(83, 199, 214, 0.14), transparent 24%),
+        radial-gradient(circle at top left, rgba(255, 122, 102, 0.12), transparent 18%),
+        linear-gradient(180deg, #f8f1e4 0%, #eef7d8 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 14px 14px 96px;
+      position: relative;
+    }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: rgba(255,255,255,0.62);
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      padding: 18px 16px 16px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 32px;
+      line-height: 1.08;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.8);
+    }
+    .hero p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      padding-right: 88px;
+    }
+    .balloons {
+      position: absolute;
+      right: 10px;
+      top: 6px;
+      display: flex;
+      gap: 4px;
+      opacity: 0.95;
+    }
+    .balloon {
+      width: 18px;
+      height: 24px;
+      border-radius: 999px 999px 999px 999px / 999px 999px 900px 900px;
+      position: relative;
+    }
+    .balloon::after {
+      content: "";
+      position: absolute;
+      width: 1.5px;
+      height: 20px;
+      background: rgba(80,80,80,0.45);
+      left: 50%;
+      top: 24px;
+      transform: translateX(-50%);
+    }
+    .b1 { background: #ff8f82; }
+    .b2 { background: #ffd05b; margin-top: 6px; }
+    .b3 { background: #57cbd8; margin-top: -2px; }
+    .legend {
+      margin-top: 14px;
+      background: #fff8d9;
+      border: 1.5px dashed #dfc96c;
+      border-radius: 18px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .legend strong { color: #8f5f00; }
+    .meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0 10px;
+    }
+    .field {
+      background: var(--white);
+      border: 1.5px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 12px;
+      box-shadow: 0 6px 12px rgba(87,70,34,.04);
+    }
+    .field label {
+      display: block;
+      font-size: 12px;
+      margin-bottom: 6px;
+      color: #6e6448;
+      font-weight: 700;
+    }
+    .field input {
+      width: 100%;
+      border: 0;
+      outline: none;
+      background: transparent;
+      font-size: 15px;
+      color: var(--text);
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 8px 0 12px;
+      background: linear-gradient(180deg, rgba(246,239,226,.95), rgba(246,239,226,.82) 72%, rgba(246,239,226,0));
+      backdrop-filter: blur(6px);
+      margin-bottom: 6px;
+    }
+    .progress-card {
+      background: rgba(255,255,255,.84);
+      border: 1.5px solid rgba(255,255,255,.95);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 10px 12px;
+    }
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+    .bar {
+      height: 10px;
+      background: #edf0d7;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), #ffb06a 48%, var(--good));
+      border-radius: inherit;
+      transition: width .25s ease;
+    }
+    .section {
+      position: relative;
+      background: rgba(255,255,255,.48);
+      border-radius: 26px;
+      padding: 8px;
+      margin: 14px 0;
+      box-shadow: 0 8px 20px rgba(87,70,34,.08);
+    }
+    .section-inner {
+      background: linear-gradient(180deg, #f0efb1 0%, #e4e58e 100%);
+      border-radius: 22px;
+      padding: 14px;
+      border: 1.5px solid rgba(190,180,90,.55);
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+    .section-title {
+      font-weight: 900;
+      font-size: 22px;
+      color: #6a4e15;
+      letter-spacing: -0.02em;
+    }
+    .score-pill {
+      white-space: nowrap;
+      background: rgba(255,255,255,.72);
+      border: 1.5px solid rgba(160, 143, 66, .35);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+    .question {
+      background: rgba(255, 253, 245, 0.72);
+      border-radius: 18px;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid rgba(190,180,90,.28);
+    }
+    .qtext {
+      font-size: 15px;
+      line-height: 1.55;
+      margin-bottom: 10px;
+      font-weight: 700;
+      word-break: keep-all;
+    }
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .choice { position: relative; }
+    .choice input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .choice label {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 42px;
+      border-radius: 14px;
+      border: 1.5px solid #d8c58a;
+      background: #fffdf7;
+      font-size: 16px;
+      font-weight: 900;
+      color: #6b5d3a;
+      box-shadow: 0 4px 10px rgba(87,70,34,.05);
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+      user-select: none;
+    }
+    .choice input:checked + label {
+      background: linear-gradient(180deg, #ffcc83 0%, #ffa56e 100%);
+      color: #fff;
+      border-color: #ff9465;
+      transform: translateY(-1px);
+    }
+    .choice label:active { transform: scale(.98); }
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 0;
+    }
+    .mini {
+      font-size: 12px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.82);
+      border: 1.5px solid rgba(215,199,160,.8);
+      font-weight: 700;
+    }
+    .result {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fffef7 0%, #f7fadf 100%);
+      border-radius: 28px;
+      border: 2px solid rgba(255,255,255,.85);
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      margin-top: 18px;
+    }
+    .result h2 {
+      margin: 0 0 12px;
+      font-size: 26px;
+      color: #ff6b5a;
+    }
+    .ranking {
+      display: grid;
+      gap: 10px;
+      margin: 14px 0 8px;
+    }
+    .rank-card {
+      background: rgba(255,255,255,.84);
+      border: 1.5px solid rgba(215,199,160,.8);
+      border-radius: 20px;
+      padding: 12px;
+    }
+    .rank-title {
+      font-size: 14px;
+      color: #6e6448;
+      margin-bottom: 4px;
+      font-weight: 800;
+    }
+    .rank-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #4a3a1c;
+    }
+    .rank-sub {
+      font-size: 12px;
+      color: #7d7356;
+      margin-top: 4px;
+    }
+    .totals {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .total-card {
+      background: rgba(255,255,255,.84);
+      border: 1.5px solid rgba(215,199,160,.8);
+      border-radius: 18px;
+      padding: 10px;
+      text-align: center;
+    }
+    .total-card strong {
+      display: block;
+      font-size: 14px;
+      color: #6e6448;
+      margin-bottom: 6px;
+    }
+    .total-card span {
+      font-size: 21px;
+      font-weight: 900;
+    }
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 900;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(87,70,34,.08);
+    }
+    .btn-main {
+      background: linear-gradient(180deg, #ff8c7a 0%, #ff6e60 100%);
+      color: white;
+    }
+    .btn-sub {
+      background: white;
+      color: #5d5237;
+      border: 1.5px solid rgba(215,199,160,.8);
+    }
+    .footer-note {
+      margin-top: 14px;
+      font-size: 12px;
+      line-height: 1.6;
+      color: #6e6448;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <section class="hero">
+      <div class="balloons">
+        <span class="balloon b1"></span>
+        <span class="balloon b2"></span>
+        <span class="balloon b3"></span>
+      </div>
+      <h1>씨앗 책방<br>모바일 체크지</h1>
+      <p>종이 없이도 휴대폰으로 바로 체크할 수 있게 만든 버전이에요. 각 문항을 <strong>1~5점</strong>으로 눌러 체크하면 합계와 상위 유형이 자동으로 계산돼요.</p>
+      <div class="legend">
+        <strong>점수 기준</strong><br>
+        1점 전혀 그렇지 않다 · 2점 대체로 그렇지 않다 · 3점 보통이다 · 4점 대체로 그렇다 · 5점 매우 그렇다
+      </div>
+    </section>
+
+    <section class="meta">
+      <div class="field">
+        <label for="checkDate">일시</label>
+        <input id="checkDate" type="datetime-local">
+      </div>
+      <div class="field">
+        <label for="userName">이름</label>
+        <input id="userName" type="text" placeholder="이름 입력">
+      </div>
+      <div class="field">
+        <label for="mbti">MBTI</label>
+        <input id="mbti" type="text" placeholder="예: INFP">
+      </div>
+      <div class="field">
+        <label for="seedResult">나의 씨앗은?</label>
+        <input id="seedResult" type="text" placeholder="자동 계산" readonly>
+      </div>
+    </section>
+
+    <div class="topbar">
+      <div class="progress-card">
+        <div class="progress-row">
+          <strong id="progressText">0 / 80 문항 체크됨</strong>
+          <span id="percentText">0%</span>
+        </div>
+        <div class="bar"><span id="progressBar"></span></div>
+        <div class="badge-row">
+          <span class="mini">저장 자동 유지</span>
+          <span class="mini">상위 유형 자동 계산</span>
+          <span class="mini">결과 복사 가능</span>
+        </div>
+      </div>
+    </div>
+
+    <main id="sections"></main>
+
+    <section class="result">
+      <h2>결과 요약</h2>
+      <p style="margin:0; line-height:1.6;">현재 체크한 점수를 기준으로 높은 순서를 보여줘요. 동점이면 같은 점수로 함께 표시돼요.</p>
+      <div class="ranking" id="ranking"></div>
+      <div class="totals" id="totals"></div>
+      <div class="actions">
+        <button class="btn-main" id="copyBtn" type="button">결과 복사</button>
+        <button class="btn-sub" id="resetBtn" type="button">전체 초기화</button>
+        <button class="btn-sub" id="topBtn" type="button">맨 위로</button>
+      </div>
+      <div class="footer-note">같은 휴대폰에서 다시 열어도 체크 내용이 남도록 자동 저장돼요.</div>
+    </section>
+  </div>
+
+  <script>
+    const SECTIONS = [{"id": 1, "title": "유형 1", "items": ["나는 모든 일에 개선하기 위해 깊이 생각해서 행동한다.", "나는 다른 사람들보다 근면하여 책임감이 강하다.", "나는 정직하고 자제력이 있는 사람이다.", "나의 행동은 원칙에 기초를 둔다.", "나는 완벽을 위해 끝까지 참고 노력한다.", "나는 규칙을 잘 지키며 엄격하다.", "나는 다른 사람들의 신임을 얻을 수 있다.", "나는 정의감이 강하고 근면하다.", "나는 주로 나의 양심과 이성에 따른다."]}, {"id": 2, "title": "유형 2", "items": ["나는 다른 사람들과 함께 일하기를 더 좋아한다.", "나의 관심사는 다른 사람들을 도와주는 것이다.", "나는 사람들에게 칭찬을 잘 한다.", "내 생각보다는 남의 생각에 공감할 때가 많다.", "나는 친구들이 나에게 의지할 때 기분이 좋다.", "나는 사람들을 관심 있게 대하고 보살피려 한다.", "나는 사람들과 친해지려고 많이 노력하고 있다.", "나는 타인의 만족을 위해 노력한다.", "나는 타인의 호감을 얻기 위해 노력한다."]}, {"id": 3, "title": "유형 3", "items": ["나는 능력을 발휘하는데 많은 시간을 투자한다.", "나는 과정보다는 결과를 중시한다.", "나는 인간중심적이기보다는 오히려 목표 중심적이다.", "나는 적응력이 뛰어나 상황에 적절히 대응한다.", "나는 사람들에게 지나친 경쟁을 강요한다.", "나는 사람들에 대한 배려보다는 일의 성취를 더 중요하게 생각한다.", "나는 성공만이 애정을 획득할 수 있다고 믿는다.", "나는 실패를 두려워하여 과장하는 경향이 있다.", "나는 침체에 빠지지 않고 무엇인가를 끊임없이 행한다."]}, {"id": 4, "title": "유형 4", "items": ["나는 감성적이어서 혼자 있을 때가 많다.", "나는 혼자서 자신만의 고상한 취미를 즐긴다.", "나는 낭만적이고 예술가적인 기질이 있다.", "나는 이방인처럼 느낄 때가 많다.", "나는 다른 사람들과는 다른 독특한 감정을 가지고 있다.", "나는 분위기에 약하고 자기 생각에 골몰하는 편이다.", "나는 내 행동의 동기와 감정에 대해 회의스러운 생각이 들때가 있다.", "나는 감동적인 것을 추구하다가 혼자 우울해지기도 한다.", "나는 비현실적이며 몽상가적 기질을 가지고 있다."]}, {"id": 5, "title": "유형 5", "items": ["나는 무엇인가에 대하여 집중하여 통찰한다.", "나는 문제가 있으면 풀릴 때까지 그것만 골똘히 생각한다.", "나는 공적인 것보다는 개인 생활에 대한 관심이 많다.", "나는 감정보다는 이성을 추구한다.", "나는 시간이나 돈을 아끼는 경향이 있다.", "나의 관심사는 나를 둘러싼 세계를 이해하는 것이다.", "나는 권위를 믿지 않고 규칙을 무시한다.", "나는 지적이고 냉철하게 관찰하는 편이다.", "나는 머리로 모든 것을 이해하고 판단한다."]}, {"id": 6, "title": "유형 6", "items": ["나는 명확한 지침이 있을 때 일의 능률이 오른다.", "나는 사랑하는 사람을 가끔 의심하는 경향이 있다.", "나의 성공에 대해서도 가끔 평가 절하하는 경향이 있다.", "나는 잘 훈련되어 있어 조직이나 집단에 헌신할 수 있다.", "나는 모든 일에서 안전을 중요하게 생각한다.", "사람들은 내게 때로 용기가 필요하다고 말한다.", "나는 결과에 대한 두려움 때문에 일을 질질 끄는 경우가 있다.", "나는 충성할 만한 사람이라고 판단되면 헌신할 수 있다.", "나는 친하게 지내는 사람과 영원한 우정을 유지하도록 노력한다."]}, {"id": 7, "title": "유형 7", "items": ["나는 자발적으로 재미있는 일을 즐긴다.", "나는 모험적이여 위험을 감수한다.", "나는 끊임없이 변화하는 생활을 좋아한다.", "나는 자극과 흥분을 유발하는 활동을 좋아한다.", "나는 어린아이처럼 명랑하고 순진하다.", "나는 미래에 대해 항상 열정을 가지고 있다.", "나는 여러 가지 일들을 즐기며, 새로운 경험을 갈망한다.", "나는 한 가지 일에 정착하기가 어렵다.", "나는 현실에 만족하지 않고 새로운 것을 추구한다."]}, {"id": 8, "title": "유형 8", "items": ["나는 의사 결정을 할 때 적절히 지도력을 발휘한다.", "나는 늘 강해야 된다고 생각한다.", "나는 사람들에게 영향력 있는 사람이다.", "나는 다른 사람들이 말하기 어려워하는 것을 이야기 한다.", "나는 공격적이고 자기주장이 강하다.", "나는 사람들을 통제하려 한다.", "나는 사람들을 지시하고 동기를 부여한다.", "나는 강한 자신감으로 사람들을 설득시킨다."]}, {"id": 9, "title": "유형 9", "items": ["나는 자기만족적이어서 태평한 편이다.", "나는 감정 동요가 많지 않은 원만한 사람이다.", "나는 안전한 해결책을 원하고 되도록 갈등을 피한다.", "나는 친구들과 긴장을 풀고 마음 편하게 지낸다.", "나는 사람들을 유쾌하고 편하게 대한다.", "사람들은 나를 그냥 좋아한다.", "나는 세상에 대해 낙관적인 편이다.", "사람들이 하는 일은 각자의 몫이며, 나와 상관없는 일이다.", "나는 조화로움을 추구하는 평화주의자이다."]}];
+    const STORAGE_KEY = "seed-book-mobile-check-v1";
+    const totalQuestions = SECTIONS.reduce((sum, s) => sum + s.items.length, 0);
+
+    const sectionsEl = document.getElementById("sections");
+    const progressText = document.getElementById("progressText");
+    const percentText = document.getElementById("percentText");
+    const progressBar = document.getElementById("progressBar");
+    const rankingEl = document.getElementById("ranking");
+    const totalsEl = document.getElementById("totals");
+    const seedResultInput = document.getElementById("seedResult");
+    const checkDateInput = document.getElementById("checkDate");
+    const userNameInput = document.getElementById("userName");
+    const mbtiInput = document.getElementById("mbti");
+
+    function nowLocalValue() {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      return now.toISOString().slice(0,16);
+    }
+
+    function loadState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+        return saved && typeof saved === "object" ? saved : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveState() {
+      const answers = {};
+      document.querySelectorAll("input[type=radio]:checked").forEach(input => {
+        answers[input.name] = Number(input.value);
+      });
+      const state = {
+        date: checkDateInput.value,
+        name: userNameInput.value,
+        mbti: mbtiInput.value,
+        answers
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateSummary();
+    }
+
+    function buildSections() {
+      const saved = loadState();
+      checkDateInput.value = saved.date || nowLocalValue();
+      userNameInput.value = saved.name || "";
+      mbtiInput.value = saved.mbti || "";
+
+      sectionsEl.innerHTML = SECTIONS.map(section => {
+        const questionHtml = section.items.map((item, idx) => {
+          const name = `s${section.id}q${idx+1}`;
+          const choices = [1,2,3,4,5].map(score => {
+            const checked = saved.answers && saved.answers[name] === score ? "checked" : "";
+            return `
+              <div class="choice">
+                <input ${checked} id="${name}_${score}" name="${name}" type="radio" value="${score}">
+                <label for="${name}_${score}">${score}</label>
+              </div>
+            `;
+          }).join("");
+          return `
+            <div class="question">
+              <div class="qtext">${idx + 1}. ${item}</div>
+              <div class="choices">${choices}</div>
+            </div>
+          `;
+        }).join("");
+
+        return `
+          <section class="section" id="section-${section.id}">
+            <div class="section-inner">
+              <div class="section-head">
+                <div class="section-title">${section.title}</div>
+                <div class="score-pill" id="sectionScore-${section.id}">합계 0점</div>
+              </div>
+              ${questionHtml}
+            </div>
+          </section>
+        `;
+      }).join("");
+
+      document.querySelectorAll("input[type=radio]").forEach(input => {
+        input.addEventListener("change", saveState);
+      });
+    }
+
+    function computeScores() {
+      const answers = {};
+      document.querySelectorAll("input[type=radio]:checked").forEach(input => {
+        answers[input.name] = Number(input.value);
+      });
+
+      const sectionScores = SECTIONS.map(section => {
+        let total = 0;
+        let answered = 0;
+        section.items.forEach((_, idx) => {
+          const key = `s${section.id}q${idx+1}`;
+          if (answers[key]) {
+            total += answers[key];
+            answered += 1;
+          }
+        });
+        return {
+          id: section.id,
+          title: section.title,
+          total,
+          answered
+        };
+      });
+
+      return { answers, sectionScores };
+    }
+
+    function updateSummary() {
+      const { answers, sectionScores } = computeScores();
+      const answeredCount = Object.keys(answers).length;
+      const percent = Math.round((answeredCount / totalQuestions) * 100);
+
+      progressText.textContent = `${answeredCount} / ${totalQuestions} 문항 체크됨`;
+      percentText.textContent = `${percent}%`;
+      progressBar.style.width = `${percent}%`;
+
+      sectionScores.forEach(score => {
+        const totalInSection = SECTIONS.find(s => s.id === score.id).items.length;
+        const el = document.getElementById(`sectionScore-${score.id}`);
+        if (el) el.textContent = `합계 ${score.total}점 · ${score.answered}/${totalInSection}문항`;
+      });
+
+      const sorted = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
+      const topThree = sorted.slice(0, 3);
+
+      rankingEl.innerHTML = topThree.map((item, idx) => `
+        <div class="rank-card">
+          <div class="rank-title">${idx + 1}순위</div>
+          <div class="rank-value">${item.title}</div>
+          <div class="rank-sub">합계 ${item.total}점 / 응답 ${item.answered}문항</div>
+        </div>
+      `).join("");
+
+      seedResultInput.value = topThree.length
+        ? topThree.map(item => `${item.title}(${item.total}점)`).join(" / ")
+        : "";
+
+      totalsEl.innerHTML = sorted.map(item => `
+        <div class="total-card">
+          <strong>${item.title}</strong>
+          <span>${item.total}</span>
+        </div>
+      `).join("");
+    }
+
+    function copyResults() {
+      const { sectionScores } = computeScores();
+      const sorted = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
+      const topThree = sorted.slice(0, 3).map((item, idx) => `${idx + 1}순위 ${item.title} (${item.total}점)`).join("\n");
+      const allScores = sorted.map(item => `${item.title}: ${item.total}점`).join("\n");
+      const text = [
+        "씨앗 책방 모바일 체크지 결과",
+        `일시: ${checkDateInput.value || ""}`,
+        `이름: ${userNameInput.value || ""}`,
+        `MBTI: ${mbtiInput.value || ""}`,
+        "",
+        topThree,
+        "",
+        "[전체 점수]",
+        allScores
+      ].join("\n");
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("결과를 복사했어요.");
+      }).catch(() => {
+        alert("복사 권한이 없어서 복사에 실패했어요. 길게 눌러 직접 복사해 주세요.");
+      });
+    }
+
+    function resetAll() {
+      const ok = confirm("정말 전체 체크를 초기화할까요?");
+      if (!ok) return;
+      localStorage.removeItem(STORAGE_KEY);
+      document.querySelectorAll("input[type=radio]").forEach(input => { input.checked = false; });
+      checkDateInput.value = nowLocalValue();
+      userNameInput.value = "";
+      mbtiInput.value = "";
+      updateSummary();
+      saveState();
+    }
+
+    buildSections();
+    updateSummary();
+
+    [checkDateInput, userNameInput, mbtiInput].forEach(input => {
+      input.addEventListener("input", saveState);
+      input.addEventListener("change", saveState);
+    });
+
+    document.getElementById("copyBtn").addEventListener("click", copyResults);
+    document.getElementById("resetBtn").addEventListener("click", resetAll);
+    document.getElementById("topBtn").addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  </script>
+</body>
+</html>
