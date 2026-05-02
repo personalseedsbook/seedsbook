@@ -615,6 +615,12 @@
     }
 
     buildSections();
+
+    // URL 파라미터로 넘어온 이름/MBTI 적용 (localStorage보다 우선)
+    const urlParams = new URLSearchParams(location.search);
+    if (urlParams.get('name')) { userNameInput.value = urlParams.get('name'); saveState(); }
+    if (urlParams.get('mbti')) { mbtiInput.value = urlParams.get('mbti'); saveState(); }
+
     updateSummary();
 
     [checkDateInput, userNameInput, mbtiInput].forEach(input => {

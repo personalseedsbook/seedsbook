@@ -108,13 +108,6 @@
     .info-label { font-size: 0.8rem; font-weight: bold; color: #888; margin-bottom: 6px; }
     .info-input { padding: 12px 14px; border-radius: 12px; font-size: 0.98rem; }
 
-    .age-stepper { display: flex; align-items: stretch; border: 2px solid var(--bd); border-radius: 12px; overflow: hidden; background: var(--bg); transition: border-color 0.2s; }
-    .age-stepper:focus-within { border-color: var(--c); }
-    .age-btn { width: 52px; background: #f5f5f5; border: none; font-size: 1.5rem; color: #555; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
-    .age-btn:hover  { background: var(--cl); color: var(--c); }
-    .age-btn:active { background: #ffcc99; }
-    .age-display { flex: 1; text-align: center; font-size: 1.5rem; font-weight: bold; color: #333; padding: 10px; display: flex; align-items: center; justify-content: center; gap: 3px; }
-    .age-unit { font-size: 0.85rem; color: #888; font-weight: normal; }
 
     .footer-note-small { text-align: center; margin-top: 16px; color: #d35400; font-weight: bold; font-size: 0.82rem; }
 
@@ -282,11 +275,7 @@
             <div><div class="info-label">이름</div><input class="info-input" type="text" id="userName" placeholder="이름을 입력해주세요"></div>
             <div>
               <div class="info-label">나이</div>
-              <div class="age-stepper">
-                <button class="age-btn" onclick="changeAge(-1)">−</button>
-                <div class="age-display"><span id="ageDisplay">20</span><span class="age-unit">세</span></div>
-                <button class="age-btn" onclick="changeAge(1)">+</button>
-              </div>
+              <input class="info-input" type="number" id="userAge" value="20" min="1" max="100" placeholder="나이 입력">
             </div>
             <div><div class="info-label">MBTI</div><input class="info-input" type="text" id="userMbti" placeholder="예: INFP" maxlength="4" autocomplete="off" oninput="this.value=this.value.toUpperCase()"></div>
           </div>
@@ -321,7 +310,7 @@
     <button class="btn-reset-all" onclick="resetAll()">처음으로 돌아가기</button>
     <div class="checklist-nav">
       <div class="checklist-nav-title">씨앗 유형 체크리스트</div>
-      <a class="btn-checklist" href="checklist.html">체크리스트 하러 가기 →</a>
+      <a class="btn-checklist" id="checklistLink" href="checklist.html">체크리스트 하러 가기 →</a>
     </div>
   </div>
 </div>
@@ -342,7 +331,7 @@
   ];
 
   const TOTAL_Q = 6;
-  let selectedChar = null, currentQ = 0, userAge = 20;
+  let selectedChar = null, currentQ = 0;
   const data = { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null };
 
   // 캐릭터 그리드 생성
@@ -385,9 +374,9 @@
     Object.assign(data, { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null });
     userAge = 20;
     document.querySelectorAll('.sel-card').forEach(el => el.classList.remove('selected'));
-    ['q2etc','q3etc','hobby','userName','userMbti'].forEach(id => $(id).value = '');
+    ['q2etc','q3etc','hobby','userName','userAge','userMbti'].forEach(id => $(id).value = '');
+    $('userAge').value = '20';
     ['q2etc','q3etc'].forEach(id => $(id).style.display = 'none');
-    $('ageDisplay').textContent = '20';
     $('surveyCharImg').src = selectedChar.image;
     $('surveyCharName').textContent = selectedChar.name;
 
@@ -440,7 +429,6 @@
     document.querySelectorAll('.part-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected'); data.participation = value;
   }
-  function changeAge(d) { userAge = Math.min(100, Math.max(1, userAge + d)); $('ageDisplay').textContent = userAge; }
 
   // 제출 & 결과
   function doSubmit() {
@@ -459,7 +447,7 @@
       ['선호 카테고리', cats.length ? cats.join(', ') : ''],
       ['추후 참여 횟수', data.participation],
       ['이름',          $('userName').value],
-      ['나이',          `${userAge}세`],
+      ['나이',          `${$('userAge').value}세`],
       ['MBTI',          $('userMbti').value],
     ];
     $('resultList').innerHTML =
@@ -467,6 +455,13 @@
       card(['책을 접한 계기', data.bookTrigger]) +
       `<div class="res-grid">${grid.map(card).join('')}</div>` +
       card(['취미/해보고 싶은 활동', $('hobby').value]);
+
+    const params = new URLSearchParams();
+    if ($('userName').value) params.set('name', $('userName').value);
+    if ($('userMbti').value) params.set('mbti', $('userMbti').value);
+    const checklistLink = $('checklistLink');
+    checklistLink.href = 'checklist.html' + (params.toString() ? '?' + params.toString() : '');
+
     hidePage('pageSurvey'); showPage('pageResult');
     requestAnimationFrame(() => {
       const wrap = $('pageResult').querySelector('.result-wrap');
