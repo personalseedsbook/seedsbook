@@ -147,6 +147,10 @@
     .res-value { color: #333; font-size: 0.97rem; line-height: 1.5; }
     .btn-reset-all { display: block; width: 100%; margin-top: 22px; padding: 16px; background: var(--c); color: #fff; border-radius: 16px; font-size: 1rem; font-weight: bold; box-shadow: 0 4px 16px rgba(255,139,106,0.4); border: none; cursor: pointer; font-family: inherit; transition: background 0.2s; }
     .btn-reset-all:hover { background: var(--cd); }
+    .checklist-nav { margin-top: 18px; background: #fff; border-radius: 16px; padding: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border: 1.5px dashed #ffb89a; }
+    .checklist-nav-title { font-size: 0.85rem; font-weight: bold; color: var(--c); margin-bottom: 10px; letter-spacing: 0.5px; }
+.btn-checklist { display: block; width: 100%; padding: 14px; background: #fff5f0; color: var(--c); border: 2px solid var(--c); border-radius: 14px; font-size: 0.97rem; font-weight: bold; text-align: center; cursor: pointer; font-family: inherit; text-decoration: none; transition: background 0.2s, color 0.2s; box-sizing: border-box; }
+    .btn-checklist:hover { background: var(--c); color: #fff; }
 
     @media (max-width: 400px) {
       .q-title { font-size: 1.05rem; }
@@ -315,6 +319,10 @@
     </div>
     <div class="result-list" id="resultList"></div>
     <button class="btn-reset-all" onclick="resetAll()">처음으로 돌아가기</button>
+    <div class="checklist-nav">
+      <div class="checklist-nav-title">씨앗 유형 체크리스트</div>
+      <a class="btn-checklist" href="checklist.html">체크리스트 하러 가기 →</a>
+    </div>
   </div>
 </div>
 
