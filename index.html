@@ -675,8 +675,10 @@
       <p>현재 체크한 점수를 기준으로 높은 순서를 보여줘요. 동점이면 같은 점수로 함께 표시돼요.</p>
       <div class="cl-ranking" id="clRanking"></div>
       <div class="cl-totals" id="clTotals"></div>
+      <!-- 변경 전: 복사, 초기화, 맨 위로 -->
+      <!-- 변경 후: 제출하기, 초기화, 맨 위로 -->
       <div class="cl-actions">
-        <button class="cl-btn-main" id="clCopyBtn" type="button">결과 복사</button>
+        <button class="cl-btn-main" id="clSubmitBtn" type="button">결과 제출</button>
         <button class="cl-btn-sub" id="clResetBtn" type="button">전체 초기화</button>
         <button class="cl-btn-sub" id="clTopBtn" type="button">맨 위로</button>
       </div>
@@ -1031,11 +1033,9 @@
     const { answers, sectionScores } = clComputeScores();
     const sorted = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
 
-    // 유형별 합계 { 1: 합계, ... }
     const scores = {};
     sectionScores.forEach(s => { scores[s.id] = s.total; });
 
-    // 문항별 점수 배열 (s1q1 ~ s9q9 순서대로)
     const items = [];
     CL_SECTIONS.forEach(section => {
       section.items.forEach((_, idx) => {
@@ -1045,13 +1045,15 @@
     });
 
     const top = sorted.slice(0, 3).map(s => `${s.title}(${s.total}점)`);
+
+    // 스프레드시트로 전송 실행
     sendToSheet({
       type:      'checklist',
       timestamp: new Date().toLocaleString('ko-KR'),
       name:      $('clUserName').value,
       mbti:      $('clMbti').value,
-      scores,   // 유형별 합계
-      items,    // 문항별 점수 (80개)
+      scores,
+      items,
       top
     });
   }
@@ -1101,7 +1103,17 @@
     input.addEventListener("change", clSaveState);
   });
 
-  $('clCopyBtn').addEventListener("click",  clCopyResults);
+  // 기존의 clCopyBtn 리스너를 아래 clSubmitBtn으로 교체
+  $('clSubmitBtn').addEventListener("click", function() {
+    // 1. 데이터 전송
+    clSendToSheet();
+    // 2. 클립보드 복사
+    clCopyResults();
+    // 3. 알림 후 결과 화면으로 이동
+    alert("데이터가 제출되었으며 결과가 복사되었습니다!");
+    hideChecklist();
+  });
+
   $('clResetBtn').addEventListener("click", clResetAll);
   $('clTopBtn').addEventListener("click",   () => $('pageChecklist').scrollTo({ top: 0, behavior: 'smooth' }));
 </script>
