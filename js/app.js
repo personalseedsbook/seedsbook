@@ -291,7 +291,7 @@ function clUpdateSummary() {
   const answeredCount = Object.keys(answers).length;
   const percent = Math.round((answeredCount / clTotalQuestions) * 100);
 
-  $('clProgressText').textContent = `${answeredCount} / ${clTotalQuestions} 문항 체크됨`;
+  $('clProgressText').textContent = `문항 체크됨`;
   $('clPercentText').textContent   = `${percent}%`;
   $('clProgressBar').style.width   = `${percent}%`;
 
