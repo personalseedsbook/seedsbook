@@ -1,8 +1,8 @@
 {
   "name": "씨앗 책방",
   "short_name": "씨앗책방",
-  "start_url": "./seedsvote.html",
-  "display": "fullscreen",
+  "start_url": "./index.html",
+  "display": "standalone",
   "background_color": "#1a1a1a",
   "theme_color": "#ff8b6a",
   "icons": [
