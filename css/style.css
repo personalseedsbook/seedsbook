@@ -439,7 +439,8 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
   transition: background 0.2s;
 }
 #pageChecklist .cl-btn-main { background: var(--c); color: #fff; box-shadow: 0 4px 14px rgba(255,139,106,0.4); }
-#pageChecklist .cl-btn-main:hover { background: var(--cd); }
+#pageChecklist .cl-btn-main:hover:not(:disabled) { background: var(--cd); }
+#pageChecklist .cl-btn-main:disabled { background: #ccc; color: #999; box-shadow: none; cursor: not-allowed; }
 #pageChecklist .cl-btn-sub { background: #fff; color: #666; border: 2px solid var(--bd); }
 #pageChecklist .cl-btn-sub:hover { background: var(--bg); }
 #pageChecklist .cl-footer-note { margin-top: 12px; font-size: 0.78rem; line-height: 1.6; color: #aaa; }

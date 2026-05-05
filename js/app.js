@@ -295,6 +295,16 @@ function clUpdateSummary() {
   $('clPercentText').textContent   = `${percent}%`;
   $('clProgressBar').style.width   = `${percent}%`;
 
+  const submitBtn = $('clSubmitBtn');
+  const remaining = clTotalQuestions - answeredCount;
+  if (percent < 100) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = `결과 제출 (${remaining}문항 남음)`;
+  } else {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '결과 제출';
+  }
+
   sectionScores.forEach(score => {
     const totalInSection = CL_SECTIONS.find(s => s.id === score.id).items.length;
     const el = $(`clScore-${score.id}`);
