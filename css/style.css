@@ -37,17 +37,93 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
 .btn-confirm  { background: var(--c); color: #fff; box-shadow: 0 4px 14px rgba(255,139,106,0.45); }
 .btn-cancel   { background: #f0f0f0; color: #555; }
 
+/* ===== 트렌드 슬라이드 ===== */
+#pageTrend {
+  background: url("../img/backimg2.png") center/cover no-repeat;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.trend-scene {
+  perspective: 1200px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+}
+.trend-card-wrap {
+  width: min(92vw, calc(75vh * 1200 / 896));
+  aspect-ratio: 1200 / 896;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  will-change: transform;
+}
+.trend-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+.trend-footer {
+  width: 100%;
+  padding: 16px 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+.trend-dots { display: flex; gap: 8px; align-items: center; }
+.trend-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+.trend-dot.active { background: rgba(255,255,255,0.95); width: 24px; border-radius: 4px; }
+/* ===== 트렌드 슬라이드 버튼 위치 및 범위 수정 ===== */
+.trend-nav-btn {
+  position: absolute;
+  /* 상하 중앙에서 하단으로 이동 (footer 위쪽 적당한 위치) */
+  top: auto;
+  bottom: 100px;
+  transform: none;
+
+  /* 버튼 가시적 크기는 유지하되, 인식 범위(padding)를 확장 */
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.45);
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, transform 0.15s;
+  font-family: inherit;
+  z-index: 10;
+
+  /* 인식 범위 10% 이상 확장: 투명한 가상 요소를 사용하여 터치 영역 확대 */
+}
+.trend-nav-btn::before { content: ''; position: absolute; inset: -15%; border-radius: 50%; }
+.trend-nav-btn:hover  { background: rgba(255,255,255,0.32); }
+.trend-nav-btn:active { transform: scale(0.88); }
+/* 하단 배치를 위해 좌우 간격 조정 */
+.trend-nav-prev { left: 30px; }
+.trend-nav-next { right: 30px; }
+/* 애니메이션 중 버튼 숨김 처리 유지 */
+.trend-nav-btn.hidden-nav { opacity: 0; pointer-events: none; }
+
 /* ===== 로딩 공통 ===== */
 .loading-page { justify-content: center; align-items: center; gap: 20px; background: rgba(255,248,240,0.98); }
-
-/* 투표 로딩 */
-#pageVoteLoading { z-index: 800; }
-.vote-loading-img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 5px solid var(--c); animation: floatBob 1.5s ease-in-out infinite; }
-@keyframes floatBob { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
-.vote-loading-name { font-size: 1.25rem; font-weight: bold; color: var(--c); text-align: center; }
-.vote-loading-bar-wrap { width: 200px; height: 6px; background: var(--cl); border-radius: 3px; overflow: hidden; }
-.vote-loading-bar { height: 100%; width: 0; background: linear-gradient(90deg,#ffb89a,var(--c)); border-radius: 3px; transition: width 1s ease-out; }
-.vote-loading-sub { font-size: 0.85rem; color: #bbb; }
 
 /* ===== 설문지 ===== */
 #pageSurvey { justify-content: flex-start; }

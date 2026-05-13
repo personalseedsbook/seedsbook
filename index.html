@@ -13,6 +13,20 @@
 </head>
 <body>
 
+<!-- 트렌드 슬라이드 -->
+<div class="page hidden" id="pageTrend">
+  <div class="trend-scene">
+    <div class="trend-card-wrap" id="trendCardWrap">
+      <img class="trend-card-img" id="trendCardImg" src="img/trend1.png" alt="">
+    </div>
+  </div>
+  <div class="trend-footer">
+    <div class="trend-dots" id="trendDots"></div>
+  </div>
+  <button class="trend-nav-btn trend-nav-prev hidden-nav" id="trendPrevBtn">&#8249;</button>
+  <button class="trend-nav-btn trend-nav-next" id="trendNextBtn">&#8250;</button>
+</div>
+
 <!-- 페이지 1: 캐릭터 선택 -->
 <div class="page bg-cover" id="pageCharacter">
   <div class="grid-container" id="characterGrid"></div>
@@ -30,13 +44,6 @@
   </div>
 </div>
 
-<!-- 투표 로딩 -->
-<div class="page hidden loading-page" id="pageVoteLoading">
-  <img class="vote-loading-img" id="voteLoadingImg" src="" alt="">
-  <div class="vote-loading-name" id="voteLoadingName"></div>
-  <div class="vote-loading-bar-wrap"><div class="vote-loading-bar" id="voteLoadingBar"></div></div>
-  <div class="vote-loading-sub">잠시만 기다려주세요...</div>
-</div>
 
 <!-- 페이지 2: 설문지 -->
 <div class="page hidden bg-cover" id="pageSurvey">

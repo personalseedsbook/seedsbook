@@ -1,7 +1,93 @@
 /* ===================================================
-   설문 / 투표 파트
+   공통 유틸
 =================================================== */
 const $ = id => document.getElementById(id);
+
+/* ===================================================
+   트렌드 슬라이드
+=================================================== */
+const TREND_IMAGES = ['img/trend1.png','img/trend2.png','img/trend3.png','img/trend4.png'];
+let trendIdx = 0, trendBusy = false;
+
+TREND_IMAGES.forEach((_, i) => {
+  const dot = Object.assign(document.createElement('div'), {
+    id: `tdot-${i}`,
+    className: 'trend-dot' + (i === 0 ? ' active' : '')
+  });
+  $('trendDots').appendChild(dot);
+});
+
+function updateTrendDots() {
+  TREND_IMAGES.forEach((_, i) => {
+    $(`tdot-${i}`).className = 'trend-dot' + (i === trendIdx ? ' active' : '');
+  });
+}
+
+function updateTrendNav() {
+  // 첫 번째 카드에서는 이전 버튼 숨김 (캐릭터 선택으로 되돌아갈 수 없음)
+  $('trendPrevBtn').classList.toggle('hidden-nav', trendIdx === 0);
+}
+
+function trendFlip(direction) {
+  if (trendBusy) return;
+  trendBusy = true;
+
+  const wrap = $('trendCardWrap');
+  const img  = $('trendCardImg');
+
+  // 나가는 방향: next → 왼쪽, prev → 오른쪽
+  const exitAngle  = direction === 'next' ? 'rotateY(90deg)'  : 'rotateY(-90deg)';
+  const enterAngle = direction === 'next' ? 'rotateY(-90deg)' : 'rotateY(90deg)';
+
+  wrap.style.transition = 'transform 0.26s ease-in, box-shadow 0.26s ease-in';
+  wrap.style.transform  = `${exitAngle} scale(0.95)`;
+  wrap.style.boxShadow  = '0 10px 30px rgba(0,0,0,0.3)';
+
+  setTimeout(() => {
+    const nextIdx = direction === 'next' ? trendIdx + 1 : trendIdx - 1;
+
+    // 마지막 카드에서 next → 설문지로 이동
+    if (direction === 'next' && nextIdx >= TREND_IMAGES.length) {
+      wrap.style.transition = 'none';
+      wrap.style.transform  = '';
+      wrap.style.boxShadow  = '';
+      hidePage('pageTrend');
+      showPage('pageSurvey');
+      trendIdx  = 0;
+      trendBusy = false;
+      return;
+    }
+
+    trendIdx = nextIdx;
+    img.src  = TREND_IMAGES[trendIdx];
+    updateTrendDots();
+    updateTrendNav();
+
+    wrap.style.transition = 'none';
+    wrap.style.transform  = `${enterAngle} scale(0.95)`;
+    wrap.style.boxShadow  = '0 10px 30px rgba(0,0,0,0.3)';
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      wrap.style.transition = 'transform 0.26s ease-out, box-shadow 0.26s ease-out';
+      wrap.style.transform  = 'rotateY(0deg) scale(1)';
+      wrap.style.boxShadow  = '0 20px 60px rgba(0,0,0,0.5)';
+      setTimeout(() => { trendBusy = false; }, 280);
+    }));
+  }, 260);
+}
+
+function addTapHandler(el, fn) {
+  let touched = false;
+  el.addEventListener('touchstart', e => { e.stopPropagation(); e.preventDefault(); touched = true; fn(); }, { passive: false });
+  el.addEventListener('click',      e => { e.stopPropagation(); if (touched) { touched = false; return; } fn(); });
+}
+
+addTapHandler($('trendPrevBtn'), () => trendFlip('prev'));
+addTapHandler($('trendNextBtn'), () => trendFlip('next'));
+
+/* ===================================================
+   설문 / 투표 파트
+=================================================== */
 
 /* ===== Google Apps Script 연동 ===== */
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHDgt3M3Dashuh32bYm1iKAFka0WjDzZiQOK1lv2BZOnc5yAQc3VLOhD3xSl2lDNncYA/exec';
@@ -56,15 +142,21 @@ $('popup').addEventListener('click', e => { if (e.target === $('popup')) closePo
 function confirmVote() {
   if (!selectedChar) return;
   $('popup').classList.remove('active');
-  $('voteLoadingImg').src = selectedChar.image;
-  $('voteLoadingName').textContent = `${selectedChar.name} 캐릭터 투표 중입니다`;
+  initSurvey();
 
-  const bar = $('voteLoadingBar');
-  bar.style.transition = 'none'; bar.style.width = '0';
-  requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.transition = 'width 1s ease-out'; bar.style.width = '100%'; }));
+  // 트렌드 카드 초기 상태로 리셋
+  trendIdx = 0;
+  trendBusy = false;
+  $('trendCardImg').src = TREND_IMAGES[0];
+  updateTrendDots();
+  updateTrendNav();
+  const wrap = $('trendCardWrap');
+  wrap.style.transition = 'none';
+  wrap.style.transform  = '';
+  wrap.style.boxShadow  = '';
 
-  showPage('pageVoteLoading'); hidePage('pageCharacter');
-  setTimeout(() => { initSurvey(); hidePage('pageVoteLoading'); showPage('pageSurvey'); }, 1100);
+  hidePage('pageCharacter');
+  showPage('pageTrend');
 }
 
 // 설문 초기화
