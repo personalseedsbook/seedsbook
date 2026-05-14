@@ -13,6 +13,22 @@
 </head>
 <body>
 
+<!-- 랜딩 페이지 -->
+<div class="page bg-cover" id="pageLanding">
+  <div class="landing-btns">
+    <button class="landing-btn landing-btn-simple" onclick="startFlow(false)">
+      <div class="landing-btn-icon">🗳️</div>
+      <div class="landing-btn-label">캐릭터 투표 + 설문지</div>
+      <div class="landing-btn-flow">캐릭터 선택 → 설문지</div>
+    </button>
+    <button class="landing-btn landing-btn-card" onclick="startFlow(true)">
+      <div class="landing-btn-icon">📰</div>
+      <div class="landing-btn-label">카드뉴스 + 투표 + 설문지</div>
+      <div class="landing-btn-flow">캐릭터 선택 → 카드뉴스 → 설문지</div>
+    </button>
+  </div>
+</div>
+
 <!-- 트렌드 슬라이드 -->
 <div class="page hidden" id="pageTrend">
   <div class="trend-scene">
@@ -28,7 +44,7 @@
 </div>
 
 <!-- 페이지 1: 캐릭터 선택 -->
-<div class="page bg-cover" id="pageCharacter">
+<div class="page hidden bg-cover" id="pageCharacter">
   <div class="grid-container" id="characterGrid"></div>
 </div>
 

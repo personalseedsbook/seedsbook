@@ -86,6 +86,17 @@ addTapHandler($('trendPrevBtn'), () => trendFlip('prev'));
 addTapHandler($('trendNextBtn'), () => trendFlip('next'));
 
 /* ===================================================
+   랜딩 페이지
+=================================================== */
+let showCardNews = false;
+
+function startFlow(withCardNews) {
+  showCardNews = withCardNews;
+  hidePage('pageLanding');
+  showPage('pageCharacter');
+}
+
+/* ===================================================
    설문 / 투표 파트
 =================================================== */
 
@@ -143,20 +154,22 @@ function confirmVote() {
   if (!selectedChar) return;
   $('popup').classList.remove('active');
   initSurvey();
-
-  // 트렌드 카드 초기 상태로 리셋
-  trendIdx = 0;
-  trendBusy = false;
-  $('trendCardImg').src = TREND_IMAGES[0];
-  updateTrendDots();
-  updateTrendNav();
-  const wrap = $('trendCardWrap');
-  wrap.style.transition = 'none';
-  wrap.style.transform  = '';
-  wrap.style.boxShadow  = '';
-
   hidePage('pageCharacter');
-  showPage('pageTrend');
+
+  if (showCardNews) {
+    trendIdx = 0;
+    trendBusy = false;
+    $('trendCardImg').src = TREND_IMAGES[0];
+    updateTrendDots();
+    updateTrendNav();
+    const wrap = $('trendCardWrap');
+    wrap.style.transition = 'none';
+    wrap.style.transform  = '';
+    wrap.style.boxShadow  = '';
+    showPage('pageTrend');
+  } else {
+    showPage('pageSurvey');
+  }
 }
 
 // 설문 초기화
@@ -273,7 +286,7 @@ function showResultPage() {
   });
 }
 
-function resetAll() { hidePage('pageResult'); showPage('pageCharacter'); selectedChar = null; }
+function resetAll() { hidePage('pageResult'); showPage('pageLanding'); selectedChar = null; }
 function showPage(id) { $(id).classList.remove('hidden'); }
 function hidePage(id) { $(id).classList.add('hidden'); }
 

@@ -16,6 +16,79 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
 .page.hidden { opacity: 0; pointer-events: none; transform: scale(0.97); }
 .bg-cover { background: url("../img/backimg2.png") center/cover no-repeat; }
 
+/* ===== 랜딩 페이지 ===== */
+#pageLanding { justify-content: flex-start; padding: 0; }
+.landing-header {
+  padding: 52px 24px 20px;
+  text-align: center;
+  flex-shrink: 0;
+  width: 100%;
+}
+.landing-title {
+  font-size: 2.4rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0,0,0,0.45);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+.landing-sub {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 1px 6px rgba(0,0,0,0.35);
+  letter-spacing: 0.5px;
+}
+.landing-btns {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 20px 36px;
+  gap: 16px;
+}
+.landing-btn {
+  flex: 1;
+  width: 100%;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.landing-btn:hover  { transform: scale(1.02); }
+.landing-btn:active { transform: scale(0.97); }
+.landing-btn-simple {
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+.landing-btn-card {
+  background: var(--c);
+  box-shadow: 0 8px 32px rgba(255,139,106,0.55);
+}
+.landing-btn-icon { font-size: 2.4rem; line-height: 1; }
+.landing-btn-label {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+.landing-btn-simple .landing-btn-label { color: #333; }
+.landing-btn-card   .landing-btn-label { color: #fff; }
+.landing-btn-flow {
+  font-size: 0.8rem;
+  opacity: 0.65;
+  letter-spacing: 0.3px;
+}
+.landing-btn-simple .landing-btn-flow { color: #555; }
+.landing-btn-card   .landing-btn-flow { color: #fff; }
+
 /* ===== 페이지 1: 캐릭터 ===== */
 #pageCharacter { justify-content: flex-end; padding: 0 12px 20vh; }
 .grid-container { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; width: 100%; max-width: 480px; }
