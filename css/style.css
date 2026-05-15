@@ -120,13 +120,13 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
   -webkit-tap-highlight-color: transparent;
 }
 .trend-scene {
-  perspective: 1200px;
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   padding: 20px;
+  overflow: hidden;
 }
 .trend-card-wrap {
   width: min(92vw, calc(75vh * 1200 / 896));
@@ -194,6 +194,24 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
 .trend-nav-next { right: 30px; }
 /* 애니메이션 중 버튼 숨김 처리 유지 */
 .trend-nav-btn.hidden-nav { opacity: 0; pointer-events: none; }
+.trend-skip-btn {
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.55);
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: bold;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.trend-skip-btn:hover  { background: rgba(255,255,255,0.28); }
+.trend-skip-btn:active { transform: scale(0.96); }
 
 /* ===== 로딩 공통 ===== */
 .loading-page { justify-content: center; align-items: center; gap: 20px; background: rgba(255,248,240,0.98); }

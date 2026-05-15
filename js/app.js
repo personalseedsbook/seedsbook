@@ -32,16 +32,17 @@ function trendFlip(direction) {
   if (trendBusy) return;
   trendBusy = true;
 
-  const wrap = $('trendCardWrap');
-  const img  = $('trendCardImg');
+  const wrap    = $('trendCardWrap');
+  const img     = $('trendCardImg');
+  const EASING  = 'cubic-bezier(0.4, 0, 0.2, 1)';
+  const DURATION = 280;
 
-  // 나가는 방향: next → 왼쪽, prev → 오른쪽
-  const exitAngle  = direction === 'next' ? 'rotateY(90deg)'  : 'rotateY(-90deg)';
-  const enterAngle = direction === 'next' ? 'rotateY(-90deg)' : 'rotateY(90deg)';
+  // next → 현재 카드 왼쪽으로 퇴장, prev → 오른쪽으로 퇴장
+  const exitTo    = direction === 'next' ? 'translateX(-108%)' : 'translateX(108%)';
+  const enterFrom = direction === 'next' ? 'translateX(108%)'  : 'translateX(-108%)';
 
-  wrap.style.transition = 'transform 0.26s ease-in, box-shadow 0.26s ease-in';
-  wrap.style.transform  = `${exitAngle} scale(0.95)`;
-  wrap.style.boxShadow  = '0 10px 30px rgba(0,0,0,0.3)';
+  wrap.style.transition = `transform ${DURATION}ms ${EASING}`;
+  wrap.style.transform  = exitTo;
 
   setTimeout(() => {
     const nextIdx = direction === 'next' ? trendIdx + 1 : trendIdx - 1;
@@ -50,7 +51,6 @@ function trendFlip(direction) {
     if (direction === 'next' && nextIdx >= TREND_IMAGES.length) {
       wrap.style.transition = 'none';
       wrap.style.transform  = '';
-      wrap.style.boxShadow  = '';
       hidePage('pageTrend');
       showPage('pageSurvey');
       trendIdx  = 0;
@@ -63,17 +63,16 @@ function trendFlip(direction) {
     updateTrendDots();
     updateTrendNav();
 
+    // 반대편에서 즉시 배치 후 슬라이드 인
     wrap.style.transition = 'none';
-    wrap.style.transform  = `${enterAngle} scale(0.95)`;
-    wrap.style.boxShadow  = '0 10px 30px rgba(0,0,0,0.3)';
+    wrap.style.transform  = enterFrom;
 
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      wrap.style.transition = 'transform 0.26s ease-out, box-shadow 0.26s ease-out';
-      wrap.style.transform  = 'rotateY(0deg) scale(1)';
-      wrap.style.boxShadow  = '0 20px 60px rgba(0,0,0,0.5)';
-      setTimeout(() => { trendBusy = false; }, 280);
+      wrap.style.transition = `transform ${DURATION}ms ${EASING}`;
+      wrap.style.transform  = 'translateX(0)';
+      setTimeout(() => { trendBusy = false; }, DURATION + 20);
     }));
-  }, 260);
+  }, DURATION);
 }
 
 function addTapHandler(el, fn) {
@@ -84,6 +83,14 @@ function addTapHandler(el, fn) {
 
 addTapHandler($('trendPrevBtn'), () => trendFlip('prev'));
 addTapHandler($('trendNextBtn'), () => trendFlip('next'));
+
+function trendSkip() {
+  if (trendBusy) return;
+  hidePage('pageTrend');
+  showPage('pageSurvey');
+  trendIdx  = 0;
+  trendBusy = false;
+}
 
 /* ===================================================
    랜딩 페이지
