@@ -108,7 +108,7 @@ function startFlow(withCardNews) {
 =================================================== */
 
 /* ===== Google Apps Script 연동 ===== */
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHDgt3M3Dashuh32bYm1iKAFka0WjDzZiQOK1lv2BZOnc5yAQc3VLOhD3xSl2lDNncYA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzbmPgOEE7wy2Dsps1SiyQ664yLa48OYQYKYNsRbCSpns4b-crkPu_mFBCk8SLyIc7V6Q/exec';
 
 function sendToSheet(payload) {
   if (!APPS_SCRIPT_URL) return;
@@ -183,9 +183,10 @@ function confirmVote() {
 function initSurvey() {
   Object.assign(data, { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null });
   document.querySelectorAll('.sel-card').forEach(el => el.classList.remove('selected'));
-  ['q2etc','q3etc','hobby','userName','userMbti'].forEach(id => $(id).value = '');
+  ['q2etc','q3etc','q6etc','hobby','userName','userMbti'].forEach(id => $(id).value = '');
   $('userAge').value = '20';
-  ['q2etc','q3etc'].forEach(id => $(id).style.display = 'none');
+  ['q2etc','q3etc','q6etc'].forEach(id => $(id).style.display = 'none');
+  $('q6etcBtn').classList.remove('selected');
   $('surveyCharImg').src = selectedChar.image;
   $('surveyCharName').textContent = selectedChar.name;
 
@@ -238,6 +239,15 @@ function selectPart(el, value) {
   document.querySelectorAll('.part-card').forEach(c => c.classList.remove('selected'));
   el.classList.add('selected'); data.participation = value;
 }
+function toggleEtc() {
+  const etcEl = $('q6etc');
+  const btn = $('q6etcBtn');
+  const show = etcEl.style.display === 'none';
+  etcEl.style.display = show ? 'block' : 'none';
+  btn.classList.toggle('selected', show);
+  if (!show) etcEl.value = '';
+  else etcEl.focus();
+}
 
 // 제출 & 결과
 function doSubmit() {
@@ -279,7 +289,8 @@ function showResultPage() {
       bookTrigger:   data.bookTrigger,
       categories:    [...data.categories].join(', '),
       hobby:         $('hobby').value,
-      participation: data.participation
+      participation: data.participation,
+      etc:           $('q6etc').value
     });
   }
 
