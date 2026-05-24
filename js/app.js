@@ -145,12 +145,6 @@ characters.forEach(c => {
   $('characterGrid').appendChild(card);
 });
 
-// 프로그레스 도트 생성
-for (let i = 0; i < TOTAL_Q; i++) {
-  const d = Object.assign(document.createElement('div'), { id: `pdot-${i}`, className: 'pdot' + (i === 0 ? ' active' : '') });
-  $('progressDots').appendChild(d);
-}
-
 // 팝업
 function showPopup(char) { selectedChar = char; $('popupImage').src = char.image; $('popup').classList.add('active'); }
 function closePopup()    { $('popup').classList.remove('active'); selectedChar = null; }
@@ -192,19 +186,14 @@ function initSurvey() {
 
   const track = $('questionsTrack');
   track.style.transition = 'none'; track.style.transform = 'translateX(0)';
-  currentQ = 0; updateDots(); updateNav();
+  currentQ = 0; updateNav();
   requestAnimationFrame(() => requestAnimationFrame(() => { track.style.transition = ''; }));
 }
 
 // 슬라이드 이동
-function goToQ(i) { $('questionsTrack').style.transform = `translateX(-${i * 100}%)`; currentQ = i; updateDots(); updateNav(); }
+function goToQ(i) { $('questionsTrack').style.transform = `translateX(-${i * 100}%)`; currentQ = i; updateNav(); }
 function nextQ()  { currentQ < TOTAL_Q - 1 ? goToQ(currentQ + 1) : doSubmit(); }
 function prevQ()  { if (currentQ > 0) goToQ(currentQ - 1); }
-
-function updateDots() {
-  for (let i = 0; i < TOTAL_Q; i++)
-    $(`pdot-${i}`).className = 'pdot' + (i < currentQ ? ' done' : i === currentQ ? ' active' : '');
-}
 
 function updateNav() {
   const last = currentQ === TOTAL_Q - 1;
