@@ -219,6 +219,27 @@ body { font-family: 'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-se
 /* ===== 설문지 ===== */
 #pageSurvey { justify-content: flex-start; }
 
+.btn-home-survey {
+  position: fixed;
+  top: 10px;
+  right: 14px;
+  z-index: 50;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c);
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-home-survey:active { background: var(--cl); transform: scale(0.92); }
+
 .survey-char-float { position: fixed; top: 30%; left: 50%; transform: translate(-50%,-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; z-index: 20; pointer-events: none; transition: opacity 0.3s ease; }
 .survey-char-float.hidden-char { opacity: 0; }
 .survey-char-float img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 3px solid var(--c); box-shadow: 0 4px 16px rgba(255,139,106,0.35); }

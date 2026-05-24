@@ -305,6 +305,7 @@ function showResultPage() {
 }
 
 function resetAll() { hidePage('pageResult'); showPage('pageLanding'); selectedChar = null; }
+function backToLanding() { hidePage('pageSurvey'); hidePage('pageTrend'); showPage('pageLanding'); selectedChar = null; }
 function showPage(id) { $(id).classList.remove('hidden'); }
 function hidePage(id) { $(id).classList.add('hidden'); }
 
