@@ -424,25 +424,12 @@ function clUpdateSummary() {
     if (el) el.textContent = `합계 ${score.total}점 · ${score.answered}/${totalInSection}문항`;
   });
 
-  const sorted    = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
-  const topThree  = sorted.slice(0, 3);
-
-  $('clRanking').innerHTML = topThree.map((item, idx) => `
-    <div class="cl-rank-card">
-      <div class="cl-rank-title">${idx + 1}순위</div>
-      <div class="cl-rank-value">${item.title}</div>
-      <div class="cl-rank-sub">합계 ${item.total}점 / 응답 ${item.answered}문항</div>
-    </div>`).join("");
+  const sorted   = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
+  const topThree = sorted.slice(0, 3);
 
   $('clSeedResult').value = topThree.length
     ? topThree.map(item => `${item.title}(${item.total}점)`).join(" / ")
     : "";
-
-  $('clTotals').innerHTML = sorted.map(item => `
-    <div class="cl-total-card">
-      <strong>${item.title}</strong>
-      <span>${item.total}</span>
-    </div>`).join("");
 }
 
 function clCopyResults() {
@@ -504,6 +491,65 @@ function clResetAll() {
   clSaveState();
 }
 
+function showRadarChart() {
+  const { sectionScores } = clComputeScores();
+  const sorted = [...sectionScores].sort((a, b) => b.total - a.total || a.id - b.id);
+  const top3   = sorted.slice(0, 3);
+
+  const medals = ['🥇', '🥈', '🥉'];
+  $('clChartRank').innerHTML = top3.map((item, idx) => `
+    <div class="cl-chart-rank-item">
+      <span class="cl-chart-rank-medal">${medals[idx]}</span>
+      <span class="cl-chart-rank-name">${item.title}</span>
+      <span class="cl-chart-rank-score">${item.total}점</span>
+    </div>`).join('');
+
+  $('clChartModal').classList.add('active');
+
+  requestAnimationFrame(() => {
+    if (window._clChart) window._clChart.destroy();
+    window._clChart = new Chart($('clRadarChart'), {
+      type: 'radar',
+      data: {
+        labels: sectionScores.map(s => s.title),
+        datasets: [{
+          data: sectionScores.map(s => s.total),
+          backgroundColor: 'rgba(255,139,106,0.18)',
+          borderColor: '#ff8b6a',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#ff8b6a',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        scales: {
+          r: {
+            min: 0,
+            max: 45,
+            ticks: { stepSize: 9, display: false, backdropColor: 'transparent' },
+            grid: { color: 'rgba(0,0,0,0.08)' },
+            angleLines: { color: 'rgba(0,0,0,0.1)' },
+            pointLabels: {
+              callback: (label, index) => [label, `${sectionScores[index].total}점`],
+              font: { size: 12, weight: 'bold', family: "'Nanum Gothic','Apple SD Gothic Neo','Malgun Gothic',sans-serif" },
+              color: '#555'
+            }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => `${ctx.parsed.r}점` } }
+        }
+      }
+    });
+  });
+}
+
 // 체크리스트 페이지 열기 / 닫기
 function showChecklist() {
   localStorage.removeItem(CL_STORAGE_KEY);
@@ -537,8 +583,12 @@ clUpdateSummary();
 
 $('clSubmitBtn').addEventListener("click", function() {
   clSendToSheet();
-  clCopyResults();
-  alert("데이터가 제출되었으며 결과가 복사되었습니다!");
+  showRadarChart();
+});
+
+$('clChartCloseBtn').addEventListener('click', function() {
+  $('clChartModal').classList.remove('active');
+  if (window._clChart) { window._clChart.destroy(); window._clChart = null; }
   hideChecklist();
 });
 

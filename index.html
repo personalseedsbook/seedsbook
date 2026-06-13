@@ -256,21 +256,32 @@
 
     <main id="clSections"></main>
 
-    <section class="cl-result">
-      <h2>결과 요약</h2>
-      <p>현재 체크한 점수를 기준으로 높은 순서를 보여줘요. 동점이면 같은 점수로 함께 표시돼요.</p>
-      <div class="cl-ranking" id="clRanking"></div>
-      <div class="cl-totals" id="clTotals"></div>
-      <div class="cl-actions">
-        <button class="cl-btn-main" id="clSubmitBtn" type="button">결과 제출</button>
-        <button class="cl-btn-sub" id="clResetBtn" type="button">전체 초기화</button>
-        <button class="cl-btn-sub" id="clTopBtn" type="button">맨 위로</button>
-      </div>
-    </section>
+    <div class="cl-actions">
+      <button class="cl-btn-main" id="clSubmitBtn" type="button">결과 제출</button>
+      <button class="cl-btn-sub" id="clResetBtn" type="button">전체 초기화</button>
+      <button class="cl-btn-sub" id="clTopBtn" type="button">맨 위로</button>
+    </div>
 
   </div>
 </div>
 
+<!-- 체크리스트 결과 차트 -->
+<div class="cl-chart-overlay" id="clChartModal">
+  <div class="cl-chart-sheet">
+    <div class="cl-chart-header">
+      <div class="cl-chart-title">체크리스트 결과</div>
+    </div>
+    <div class="cl-chart-canvas-wrap">
+      <canvas id="clRadarChart"></canvas>
+    </div>
+    <div class="cl-chart-rank" id="clChartRank"></div>
+    <div class="cl-chart-btns">
+      <button class="cl-chart-btn-sub" id="clChartCloseBtn">처음으로</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
