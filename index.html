@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +10,19 @@
   <meta name="apple-mobile-web-app-title" content="씨앗책방">
   <link rel="apple-touch-icon" href="icon.png">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-
 <!-- 랜딩 페이지 -->
 <div class="page bg-cover" id="pageLanding">
   <div class="landing-btns">
     <button class="landing-btn landing-btn-simple" onclick="startFlow(false)">
-      <div class="landing-btn-icon">🗳️</div>
+      <div class="landing-btn-icon"><i class="fa-solid fa-check-to-slot"></i></div>
       <div class="landing-btn-label">캐릭터 투표 + 설문지</div>
       <div class="landing-btn-flow">캐릭터 선택 → 설문지</div>
     </button>
     <button class="landing-btn landing-btn-card" onclick="startFlow(true)">
-      <div class="landing-btn-icon">📰</div>
+      <div class="landing-btn-icon"><i class="fa-regular fa-newspaper"></i></div>
       <div class="landing-btn-label">카드뉴스 + 투표 + 설문지</div>
       <div class="landing-btn-flow">캐릭터 선택 → 카드뉴스 → 설문지</div>
     </button>
@@ -38,7 +38,7 @@
   </div>
   <div class="trend-footer">
     <div class="trend-dots" id="trendDots"></div>
-    <button class="trend-skip-btn" id="trendSkipBtn" onclick="trendSkip()">넘기기 →</button>
+    <button class="trend-skip-btn" id="trendSkipBtn" onclick="trendSkip()">넘기기 <i class="fa-solid fa-arrow-right"></i></button>
   </div>
   <button class="trend-nav-btn trend-nav-prev hidden-nav" id="trendPrevBtn">&#8249;</button>
   <button class="trend-nav-btn trend-nav-next" id="trendNextBtn">&#8250;</button>
@@ -125,12 +125,12 @@
         <div class="q-card">
           <div class="q-title">어떤 종류의 책을 좋아하시나요? <span style="font-size:0.8rem;color:#aaa;font-weight:normal;">중복 선택 가능</span></div>
           <div class="cat-grid">
-            <div class="cat-card sel-card" onclick="toggleCat(this,'인문/고전')">📖 인문/고전</div>
-            <div class="cat-card sel-card" onclick="toggleCat(this,'과학')">🔬 과학</div>
-            <div class="cat-card sel-card" onclick="toggleCat(this,'경제/경영/사회')">💼 경제/경영/사회</div>
-            <div class="cat-card sel-card" onclick="toggleCat(this,'에세이')">✍️ 에세이(소설)</div>
-            <div class="cat-card sel-card" onclick="toggleCat(this,'만화')">🎨 만화</div>
-            <div class="cat-card sel-card" onclick="toggleCat(this,'잡지')">📰 잡지</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'인문/고전')"><i class="fa-solid fa-book"></i> 인문/고전</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'과학')"><i class="fa-solid fa-flask"></i> 과학</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'경제/경영/사회')"><i class="fa-solid fa-briefcase"></i> 경제/경영</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'에세이')"><i class="fa-solid fa-pen-to-square"></i> 에세이</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'만화')"><i class="fa-solid fa-palette"></i> 만화</div>
+            <div class="cat-card sel-card" onclick="toggleCat(this,'잡지')"><i class="fa-regular fa-newspaper"></i> 잡지</div>
           </div>
         </div>
       </div>
@@ -147,10 +147,12 @@
       <div class="q-slide" style="justify-content:flex-end;padding-bottom:28px;">
         <div class="q-card" style="overflow-y:auto;max-height:calc(100vh - 220px);">
           <div style="margin-bottom:22px;">
-            <div class="info-label" style="font-size:0.95rem;color:#555;font-weight:bold;margin-bottom:12px;">추후 몇 회 참여하고 싶으신가요?</div>
+            <div class="info-label" style="font-size:0.95rem;color:#555;font-weight:bold;margin-bottom:12px;">추후 프로그램 참여 희망 횟수를 골라주세요
+                <button class="qbtn-nav" type="button" onclick="toggleBqTooltip(event)" aria-label="도서 추천 프로그램 안내"><i class="fa-regular fa-circle-question"></i></button>
+            </div>
             <div class="part-row">
-              <div class="part-card sel-card" onclick="selectPart(this,'3회')"><span class="part-num">1</span><div class="part-unit">회</div></div>
-              <div class="part-card sel-card" onclick="selectPart(this,'5회')"><span class="part-num">3</span><div class="part-unit">회</div></div>
+              <div class="part-card sel-card" onclick="selectPart(this,'3회')"><span class="part-num">3</span><div class="part-unit">회</div></div>
+              <div class="part-card sel-card" onclick="selectPart(this,'5회')"><span class="part-num">5</span><div class="part-unit">회</div></div>
               <div class="part-card sel-card" onclick="selectPart(this,'10회')"><span class="part-num">10</span><div class="part-unit">회</div></div>
             </div>
           </div>
@@ -172,8 +174,8 @@
   </div>
 
   <div class="survey-nav">
-    <button class="btn btn-prev" id="prevBtn" onclick="prevQ()" style="display:none;">← 이전</button>
-    <button class="btn btn-next" id="nextBtn" onclick="nextQ()">다음 →</button>
+    <button class="btn btn-prev" id="prevBtn" onclick="prevQ()" style="display:none;"><i class="fa-solid fa-chevron-left"></i> 이전</button>
+    <button class="btn btn-next" id="nextBtn" onclick="nextQ()">다음 <i class="fa-solid fa-chevron-right"></i></button>
   </div>
 </div>
 
@@ -197,6 +199,41 @@
       <div class="checklist-nav-title">씨앗 유형 체크리스트</div>
       <button class="btn-checklist" onclick="showChecklist()">체크리스트 하러 가기 →</button>
     </div>
+  </div>
+</div>
+
+<!-- 도서 추천 퀴즈 오버레이 -->
+<div class="bq-overlay" id="pageBookQuiz">
+  <div class="bq-sheet">
+
+    <div class="bq-sheet-header">
+      <div class="bq-sheet-title"><i class="fa-solid fa-book-open-reader"></i>프로그램 간단 예시</div>
+      <button class="bq-close-btn" onclick="hideBookQuiz()" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+
+    <!-- 퀴즈 영역 -->
+    <div id="bqQuizArea">
+      <div class="bq-progress-wrap">
+        <div class="bq-progress-bar-bg"><div class="bq-progress-bar-fill" id="bqProgressFill"></div></div>
+        <div class="bq-progress-text" id="bqProgressText">질문 1 / 5</div>
+      </div>
+      <div class="bq-question-card" id="bqQuestionBox"></div>
+      <div class="bq-options">
+        <button class="bq-option-btn" id="bqBtnA" onclick="bqSelectAnswer('a')"></button>
+        <button class="bq-option-btn" id="bqBtnB" onclick="bqSelectAnswer('b')"></button>
+      </div>
+    </div>
+
+    <!-- 결과 영역 -->
+    <div id="bqResultArea" style="display:none;">
+      <div class="bq-result-header">
+        <div class="bq-result-title" id="bqResultTitle"></div>
+        <div class="bq-click-hint"><i class="fa-regular fa-lightbulb"></i> 카드를 클릭하면 책 소개를 볼 수 있어요!</div>
+      </div>
+      <div class="bq-book-grid" id="bqBookGrid"></div>
+      <button class="bq-restart-btn" onclick="bqStartQuiz()"><i class="fa-solid fa-rotate-left"></i> 처음부터 다시하기</button>
+    </div>
+
   </div>
 </div>
 
@@ -279,6 +316,14 @@
       <button class="cl-chart-btn-sub" id="clChartCloseBtn">처음으로</button>
     </div>
   </div>
+</div>
+
+<!-- 도서 추천 말풍선 툴팁 -->
+<div class="bq-tooltip" id="bqTooltip">
+  <div class="bq-tooltip-icon"><i class="fa-solid fa-book-open-reader"></i></div>
+  <div class="bq-tooltip-title">맞춤 도서 추천</div>
+  <p class="bq-tooltip-desc">5가지 질문으로<br>나에게 꼭 맞는 책 유형을<br>찾아드려요!</p>
+  <button class="bq-tooltip-start" onclick="closeBqTooltip(); showBookQuiz()">퀴즈 시작 <i class="fa-solid fa-arrow-right"></i></button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>

@@ -198,7 +198,9 @@ function prevQ()  { if (currentQ > 0) goToQ(currentQ - 1); }
 function updateNav() {
   const last = currentQ === TOTAL_Q - 1;
   $('prevBtn').style.display = currentQ > 0 ? 'block' : 'none';
-  $('nextBtn').textContent = last ? '제출하기 ✓' : '다음 →';
+  $('nextBtn').innerHTML = last
+    ? '제출하기 <i class="fa-solid fa-check"></i>'
+    : '다음 <i class="fa-solid fa-chevron-right"></i>';
   $('nextBtn').classList.toggle('submit-mode', last);
   $('surveyCharFloat').classList.toggle('hidden-char', last);
 }
@@ -594,3 +596,193 @@ $('clChartCloseBtn').addEventListener('click', function() {
 
 $('clResetBtn').addEventListener("click", clResetAll);
 $('clTopBtn').addEventListener("click",   () => $('pageChecklist').scrollTo({ top: 0, behavior: 'smooth' }));
+
+/* ===================================================
+   도서 추천 퀴즈
+=================================================== */
+function toggleBqTooltip(e) {
+  const tooltip = $('bqTooltip');
+  if (tooltip.classList.contains('active')) { closeBqTooltip(); return; }
+  e.stopPropagation();
+
+  const btn  = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const TW   = 210;
+  const GAP  = 10;
+
+  let left = rect.left + rect.width / 2 - TW / 2;
+  left = Math.max(GAP, Math.min(left, window.innerWidth - TW - GAP));
+
+  const arrowLeft = rect.left + rect.width / 2 - left;
+  tooltip.style.top  = (rect.bottom + GAP) + 'px';
+  tooltip.style.left = left + 'px';
+  tooltip.style.setProperty('--arrow-left', arrowLeft + 'px');
+  tooltip.classList.add('active');
+}
+
+function closeBqTooltip() { $('bqTooltip').classList.remove('active'); }
+
+document.addEventListener('click', e => {
+  const tooltip = $('bqTooltip');
+  if (tooltip.classList.contains('active') && !tooltip.contains(e.target)) {
+    closeBqTooltip();
+  }
+});
+
+const BQ_QUESTIONS = [
+  {
+    q: "주말을 앞둔 여유로운 저녁, 당신의 시간 보내기 방식은?",
+    a: { text: "편안한 소파에서 재미있는 이야기를 몰아본다.", scores: {A:1,B:1,C:1} },
+    b: { text: "평소 궁금했던 분야의 다큐나 기사를 찾아본다.", scores: {D:1,E:1} }
+  },
+  {
+    q: "친구와 대화할 때 더 즐거워하는 주제는?",
+    a: { text: "최근 겪었던 일상적인 에피소드나 감정적인 고민들", scores: {A:1,C:1} },
+    b: { text: "최근 이슈가 되는 사회 현상이나 미래 기술", scores: {B:1,D:1,E:1} }
+  },
+  {
+    q: "책을 읽는 가장 큰 목적은 무엇인가요?",
+    a: { text: "복잡한 현실에서 벗어나 다른 세계로 몰입하기 위해", scores: {A:1,B:2} },
+    b: { text: "나 자신을 돌아보거나 새로운 지식을 얻기 위해", scores: {C:1,D:1,E:1} }
+  },
+  {
+    q: "힘들고 지칠 때 마음을 편안하게 해주는 것은?",
+    a: { text: "'나도 그래'라는 따뜻한 공감과 위로", scores: {A:1,C:2} },
+    b: { text: "문제를 다른 관점에서 바라보게 하는 깨달음", scores: {D:2,E:1} }
+  },
+  {
+    q: "지금 당신에게 특별한 능력이 생긴다면?",
+    a: { text: "사람들의 마음을 깊이 이해하고 치유하는 능력", scores: {A:1,C:1,D:1} },
+    b: { text: "세상이 돌아가는 복잡한 원리를 꿰뚫어 보는 능력", scores: {B:1,E:2} }
+  }
+];
+
+const BQ_RESULTS = {
+  A: {
+    title: "<i class='fa-regular fa-book'></i> '공감 100%' 현실/드라마 소설",
+    books: [
+      { title: "불편한 편의점\n(김호연)", desc: "이웃들의 고단한 삶을 따뜻하게 위로하는 편의점 이야기", img: "img/BQbooks/A_1.png" },
+      { title: "아몬드\n(손원평)",        desc: "감정을 느끼지 못하는 소년의 특별한 성장과 교감",        img: "img/BQbooks/A_2.png" },
+      { title: "소년이 온다\n(한강)",     desc: "역사의 아픔 속에서 피어난 인간의 존엄성과 사랑",        img: "img/BQbooks/A_3.png" },
+      { title: "모순\n(양귀자)",          desc: "인생의 모순을 탐구하며 나다운 삶을 찾아가는 여정",      img: "img/BQbooks/A_4.png" }
+    ]
+  },
+  B: {
+    title: "<i class='fa-regular fa-rocket'></i> '상상력 자극' 환상/SF 소설",
+    books: [
+      { title: "우리가 빛의 속도로\n갈 수 없다면", desc: "차가운 우주 속에서 피어나는 따뜻한 SF 단편집",         img: "img/BQbooks/B_1.png" },
+      { title: "달러구트 꿈 백화점\n(이미예)",     desc: "잠들어야만 입장할 수 있는 꿈 백화점의 비밀",           img: "img/BQbooks/B_2.png" },
+      { title: "지구 끝의 온실\n(김초엽)",         desc: "멸망한 세계 속에서 식물들이 만들어낸 희망의 연대기",   img: "img/BQbooks/B_3.png" },
+      { title: "천 개의 파랑\n(천선란)",           desc: "휴머노이드 로봇과 경주마가 나누는 따뜻한 교감",         img: "img/BQbooks/B_4.png" }
+    ]
+  },
+  C: {
+    title: "<i class='fa-regular fa-mug-hot'></i> '마음 힐링' 따뜻한 에세이",
+    books: [
+      { title: "나는 나로\n살기로 했다",       desc: "냉담한 세상 속에서 온전한 나로 당당하게 사는 법",       img: "img/BQbooks/C_1.png" },
+      { title: "언어의 온도\n(이기주)",         desc: "말과 글이 가진 따뜻한 온도로 마음을 채우는 글",         img: "img/BQbooks/C_2.png" },
+      { title: "기분이 태도가\n되지 않게",      desc: "내 감정의 주인이 되어 일상을 현명하게 지키는 법",       img: "img/BQbooks/C_3.png" },
+      { title: "죽고 싶지만\n떡볶이는 먹고 싶어", desc: "가벼운 우울감 속에서 나를 찾아가는 솔직한 고백",     img: "img/BQbooks/C_4.png" }
+    ]
+  },
+  D: {
+    title: "<i class='fa-regular fa-brain'></i> '깊은 사유' 역사/철학/인문",
+    books: [
+      { title: "사피엔스\n(유발 하라리)",          desc: "유인원에서 지구의 지배자가 된 인류의 거대한 역사",       img: "img/BQbooks/D_1.png" },
+      { title: "총, 균, 쇠\n(재레드 다이아몬드)",  desc: "무기와 질병이 바꾼 인류 문명의 불평등에 대한 해답",     img: "img/BQbooks/D_2.png" },
+      { title: "마흔에 읽는\n쇼펜하우어",          desc: "냉정한 철학자가 건네는 삶의 격조와 지혜",               img: "img/BQbooks/D_3.png" },
+      { title: "도둑맞은 집중력\n(요한 하리)",      desc: "현대 사회가 우리의 집중력을 어떻게 빼앗아 갔는가",     img: "img/BQbooks/D_4.png" }
+    ]
+  },
+  E: {
+    title: "<i class='fa-regular fa-lightbulb'></i> '세상의 이치' 과학/경제/실용",
+    books: [
+      { title: "코스모스\n(칼 세이건)",        desc: "광활한 우주 속에서 인간이라는 존재의 경이로움",           img: "img/BQbooks/E_1.png" },
+      { title: "이기적 유전자\n(리처드 도킨스)", desc: "인간과 생물의 행동을 지배하는 유전자의 생존 전략",       img: "img/BQbooks/E_2.png" },
+      { title: "부자의 그릇\n(이즈미 마사토)", desc: "돈을 다루는 능력을 키워주는 소설 형식의 경제 기본서",     img: "img/BQbooks/E_3.png" },
+      { title: "돈의 속성\n(김승호)",          desc: "진짜 부자가 되기 위해 알아야 할 돈의 5가지 속성",         img: "img/BQbooks/E_4.png" }
+    ]
+  }
+};
+
+let bqQIndex = 0;
+let bqScores = { A:0, B:0, C:0, D:0, E:0 };
+
+function bqStartQuiz() {
+  bqQIndex = 0;
+  bqScores = { A:0, B:0, C:0, D:0, E:0 };
+  $('bqQuizArea').style.display = 'block';
+  $('bqResultArea').style.display = 'none';
+  bqUpdateQuestion();
+}
+
+function bqUpdateQuestion() {
+  const pct = ((bqQIndex) / BQ_QUESTIONS.length) * 100;
+  $('bqProgressFill').style.width = pct + '%';
+  $('bqProgressText').textContent = `질문 ${bqQIndex + 1} / ${BQ_QUESTIONS.length}`;
+  const q = BQ_QUESTIONS[bqQIndex];
+  $('bqQuestionBox').textContent = q.q;
+  $('bqBtnA').textContent = q.a.text;
+  $('bqBtnB').textContent = q.b.text;
+  [$('bqBtnA'), $('bqBtnB')].forEach(b => b.classList.remove('selected'));
+}
+
+function bqSelectAnswer(choice) {
+  const btn = choice === 'a' ? $('bqBtnA') : $('bqBtnB');
+  btn.classList.add('selected');
+  const scores = BQ_QUESTIONS[bqQIndex][choice].scores;
+  for (const k in scores) bqScores[k] += scores[k];
+  setTimeout(() => {
+    bqQIndex++;
+    if (bqQIndex < BQ_QUESTIONS.length) {
+      bqUpdateQuestion();
+    } else {
+      bqShowResult();
+    }
+  }, 280);
+}
+
+function bqShowResult() {
+  $('bqProgressFill').style.width = '100%';
+  const maxKey = Object.keys(bqScores).reduce((a, b) => bqScores[a] > bqScores[b] ? a : b);
+  const result = BQ_RESULTS[maxKey];
+
+  $('bqResultTitle').innerHTML = result.title;
+  const grid = $('bqBookGrid');
+  grid.innerHTML = '';
+
+  result.books.forEach(book => {
+    const card = document.createElement('div');
+    card.className = 'bq-card';
+    const hasImg = !!book.img;
+    const frontContent = hasImg
+      ? `<img src="${book.img}" class="bq-card-img" alt="">`
+      : `<i class="fa-solid fa-book-open bq-card-icon"></i>`;
+    card.innerHTML = `
+      <div class="bq-card-inner">
+        <div class="bq-card-front${hasImg ? ' has-img' : ''}">
+          ${frontContent}
+          <div class="bq-card-label">${book.title.replace(/\n/g, '<br>')}</div>
+        </div>
+        <div class="bq-card-back"><p>${book.desc}</p></div>
+      </div>`;
+    card.addEventListener('click', () => {
+      card.querySelector('.bq-card-inner').classList.toggle('is-flipped');
+    });
+    grid.appendChild(card);
+  });
+
+  $('bqQuizArea').style.display = 'none';
+  $('bqResultArea').style.display = 'block';
+  $('pageBookQuiz').querySelector('.bq-sheet').scrollTop = 0;
+}
+
+function showBookQuiz() {
+  $('pageBookQuiz').classList.add('active');
+  $('pageBookQuiz').querySelector('.bq-sheet').scrollTop = 0;
+  bqStartQuiz();
+}
+
+function hideBookQuiz() {
+  $('pageBookQuiz').classList.remove('active');
+}
