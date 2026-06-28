@@ -659,7 +659,7 @@ const BQ_QUESTIONS = [
 
 const BQ_RESULTS = {
   A: {
-    title: "<i class='fa-regular fa-book'></i> '공감 100%' 현실/드라마 소설",
+    title: "<i class='fa-solid fa-book'></i> '공감 100%' 현실/드라마 소설",
     books: [
       { title: "불편한 편의점\n(김호연)", desc: "이웃들의 고단한 삶을 따뜻하게 위로하는 편의점 이야기", img: "img/BQbooks/A_1.png" },
       { title: "아몬드\n(손원평)",        desc: "감정을 느끼지 못하는 소년의 특별한 성장과 교감",        img: "img/BQbooks/A_2.png" },
@@ -668,7 +668,7 @@ const BQ_RESULTS = {
     ]
   },
   B: {
-    title: "<i class='fa-regular fa-rocket'></i> '상상력 자극' 환상/SF 소설",
+    title: "<i class='fa-solid fa-rocket'></i> '상상력 자극' 환상/SF 소설",
     books: [
       { title: "우리가 빛의 속도로\n갈 수 없다면", desc: "차가운 우주 속에서 피어나는 따뜻한 SF 단편집",         img: "img/BQbooks/B_1.png" },
       { title: "달러구트 꿈 백화점\n(이미예)",     desc: "잠들어야만 입장할 수 있는 꿈 백화점의 비밀",           img: "img/BQbooks/B_2.png" },
@@ -677,7 +677,7 @@ const BQ_RESULTS = {
     ]
   },
   C: {
-    title: "<i class='fa-regular fa-mug-hot'></i> '마음 힐링' 따뜻한 에세이",
+    title: "<i class='fa-solid fa-mug-hot'></i> '마음 힐링' 따뜻한 에세이",
     books: [
       { title: "나는 나로\n살기로 했다",       desc: "냉담한 세상 속에서 온전한 나로 당당하게 사는 법",       img: "img/BQbooks/C_1.png" },
       { title: "언어의 온도\n(이기주)",         desc: "말과 글이 가진 따뜻한 온도로 마음을 채우는 글",         img: "img/BQbooks/C_2.png" },
@@ -686,7 +686,7 @@ const BQ_RESULTS = {
     ]
   },
   D: {
-    title: "<i class='fa-regular fa-brain'></i> '깊은 사유' 역사/철학/인문",
+    title: "<i class='fa-solid fa-brain'></i> '깊은 사유' 역사/철학/인문",
     books: [
       { title: "사피엔스\n(유발 하라리)",          desc: "유인원에서 지구의 지배자가 된 인류의 거대한 역사",       img: "img/BQbooks/D_1.png" },
       { title: "총, 균, 쇠\n(재레드 다이아몬드)",  desc: "무기와 질병이 바꾼 인류 문명의 불평등에 대한 해답",     img: "img/BQbooks/D_2.png" },
@@ -695,7 +695,7 @@ const BQ_RESULTS = {
     ]
   },
   E: {
-    title: "<i class='fa-regular fa-lightbulb'></i> '세상의 이치' 과학/경제/실용",
+    title: "<i class='fa-solid fa-lightbulb'></i> '세상의 이치' 과학/경제/실용",
     books: [
       { title: "코스모스\n(칼 세이건)",        desc: "광활한 우주 속에서 인간이라는 존재의 경이로움",           img: "img/BQbooks/E_1.png" },
       { title: "이기적 유전자\n(리처드 도킨스)", desc: "인간과 생물의 행동을 지배하는 유전자의 생존 전략",       img: "img/BQbooks/E_2.png" },
