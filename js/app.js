@@ -764,7 +764,7 @@ function bqShowResult() {
           ${frontContent}
           <div class="bq-card-label">${book.title.replace(/\n/g, '<br>')}</div>
         </div>
-        <div class="bq-card-back"><p>${book.desc}</p></div>
+        <div class="bq-card-back" style="font-size: 15px; font-weight: bold; padding: 20%"><p>${book.desc}</p></div>
       </div>`;
     card.addEventListener('click', () => {
       card.querySelector('.bq-card-inner').classList.toggle('is-flipped');
