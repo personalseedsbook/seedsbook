@@ -166,6 +166,16 @@
             <div id="q6etcBtn" class="cat-card sel-card" style="text-align:center;" onclick="toggleEtc()">기타</div>
             <input type="text" class="info-input" id="q6etc" placeholder="직접 입력해주세요 ✍️" style="display:none;">
           </div>
+          <div class="privacy-consent-row" id="privacyConsentRow">
+            <label class="privacy-consent-label">
+              <input type="checkbox" id="privacyConsent" onchange="updatePrivacyConsent(this)">
+              <span class="privacy-check-box"><i class="fa-solid fa-check"></i></span>
+              <span class="privacy-consent-text">
+                <span class="privacy-required">(필수)</span>
+                <button type="button" class="privacy-link" onclick="showPrivacyModal(event)">개인정보 수집 및 이용</button>에 동의합니다
+              </span>
+            </label>
+          </div>
           <div class="footer-note-small">〈 참여시 자체 제작 굿즈 제공 〉</div>
         </div>
       </div>
@@ -324,6 +334,47 @@
   <div class="bq-tooltip-title">맞춤 유형 추천</div>
   <p class="bq-tooltip-desc">5가지 질문으로<br>알맞은 책 유형을<br>찾아드려요!</p>
   <button class="bq-tooltip-start" onclick="closeBqTooltip(); showBookQuiz()">퀴즈 시작 <i class="fa-solid fa-arrow-right"></i></button>
+</div>
+
+<!-- 개인정보 수집·이용 동의 모달 -->
+<div class="privacy-modal-overlay" id="privacyModal">
+  <div class="privacy-modal-sheet">
+    <div class="privacy-modal-header">
+      <div class="privacy-modal-title"><i class="fa-solid fa-shield-halved"></i> 개인정보 수집 및 이용 동의서</div>
+      <button class="bq-close-btn" onclick="hidePrivacyModal()" aria-label="닫기"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="privacy-modal-body">
+      <p class="privacy-intro">씨앗책방은 프로그램 참가 신청 및 원활한 서비스 제공을 위해 아래와 같이 개인정보를 수집 및 이용합니다. 내용을 확인하신 후 동의해 주시기 바랍니다.</p>
+      <div class="privacy-table">
+        <div class="privacy-table-row">
+          <div class="privacy-table-key">수집 및 이용 목적</div>
+          <div class="privacy-table-val">
+            <ul>
+              <li>프로그램 신청 확인 및 참여자 식별</li>
+              <li>프로그램 안내 사항 및 변경 사항 고지 (알림톡/문자 발송)</li>
+              <li>프로그램 관련 문의 사항 응대</li>
+            </ul>
+          </div>
+        </div>
+        <div class="privacy-table-row">
+          <div class="privacy-table-key">수집하는 항목</div>
+          <div class="privacy-table-val">이름, 휴대전화번호</div>
+        </div>
+        <div class="privacy-table-row">
+          <div class="privacy-table-key">보유 및 이용 기간</div>
+          <div class="privacy-table-val">
+            프로그램 종료 후 3개월까지 보관 후 파기<br>
+            <span class="privacy-subtext">(단, 관계 법령의 규정에 따라 보존할 필요가 있는 경우 해당 기간 동안 보관)</span>
+          </div>
+        </div>
+      </div>
+      <p class="privacy-notice">귀하는 위 개인정보 수집 및 이용에 대한 동의를 거부할 권리가 있습니다.<br>단, 동의를 거부하실 경우 씨앗책방에서 제공하는 프로그램 참여 신청이 제한될 수 있습니다.</p>
+    </div>
+    <div class="privacy-modal-footer">
+      <button class="btn btn-cancel" onclick="hidePrivacyModal()">닫기</button>
+      <button class="btn btn-confirm" onclick="agreeAndClose()"><i class="fa-solid fa-check"></i> 동의합니다</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>

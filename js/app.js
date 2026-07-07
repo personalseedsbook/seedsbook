@@ -133,7 +133,7 @@ const characters = [
 ];
 
 const TOTAL_Q = 6;
-let selectedChar = null, currentQ = 0;
+let selectedChar = null, currentQ = 0, privacyConsented = false;
 const data = { preference: null, bookThought: null, bookTrigger: null, categories: new Set(), participation: null };
 
 // 캐릭터 그리드 생성
@@ -181,6 +181,9 @@ function initSurvey() {
   $('userAge').value = '20';
   ['q2etc','q3etc','q6etc'].forEach(id => $(id).style.display = 'none');
   $('q6etcBtn').classList.remove('selected');
+  $('privacyConsent').checked = false;
+  privacyConsented = false;
+  $('privacyConsentRow').classList.remove('consent-error');
   $('surveyCharImg').src = selectedChar.image;
   $('surveyCharName').textContent = selectedChar.name;
 
@@ -240,8 +243,37 @@ function toggleEtc() {
   else etcEl.focus();
 }
 
+// 개인정보 동의
+function updatePrivacyConsent(cb) {
+  privacyConsented = cb.checked;
+  const row = $('privacyConsentRow');
+  if (cb.checked) row.classList.remove('consent-error');
+}
+
+function showPrivacyModal(e) {
+  e.stopPropagation();
+  $('privacyModal').classList.add('active');
+}
+
+function hidePrivacyModal() {
+  $('privacyModal').classList.remove('active');
+}
+
+function agreeAndClose() {
+  $('privacyConsent').checked = true;
+  privacyConsented = true;
+  $('privacyConsentRow').classList.remove('consent-error');
+  hidePrivacyModal();
+}
+
 // 제출 & 결과
 function doSubmit() {
+  if (!privacyConsented) {
+    const row = $('privacyConsentRow');
+    row.classList.add('consent-error');
+    row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    return;
+  }
   showPage('submitLoading');
   setTimeout(() => { hidePage('submitLoading'); showResultPage(); }, 1400);
 }
@@ -264,7 +296,8 @@ function showResultPage() {
     card(['책에 대한 인식', data.bookThought]) +
     card(['책을 접한 계기', data.bookTrigger]) +
     `<div class="res-grid">${grid.map(card).join('')}</div>` +
-    card(['취미/해보고 싶은 활동', $('hobby').value]);
+    card(['취미/해보고 싶은 활동', $('hobby').value]) +
+    `<div class="res-card res-card-consent"><div class="res-label">개인정보 수집·이용 동의</div><div class="res-value res-value-consent"><i class="fa-solid fa-shield-halved"></i> 동의함</div></div>`;
 
   // 이름이 있을 때만 스프레드시트 전송
   if ($('userName').value.trim()) {
@@ -281,7 +314,8 @@ function showResultPage() {
       categories:    [...data.categories].join(', '),
       hobby:         $('hobby').value,
       participation: data.participation,
-      etc:           $('q6etc').value
+      etc:           $('q6etc').value,
+      privacyConsent: '동의함'
     });
   }
 
@@ -303,6 +337,8 @@ function hidePage(id) { $(id).classList.add('hidden'); }
 /* ===================================================
    체크리스트 파트
 =================================================== */
+let _clChart = null;
+
 const CL_SECTIONS = [
   {"id":1,"title":"유형 1","items":["나는 모든 일에 개선하기 위해 깊이 생각해서 행동한다.","나는 다른 사람들보다 근면하여 책임감이 강하다.","나는 정직하고 자제력이 있는 사람이다.","나의 행동은 원칙에 기초를 둔다.","나는 완벽을 위해 끝까지 참고 노력한다.","나는 규칙을 잘 지키며 엄격하다.","나는 다른 사람들의 신임을 얻을 수 있다.","나는 정의감이 강하고 근면하다.","나는 주로 나의 양심과 이성에 따른다."]},
   {"id":2,"title":"유형 2","items":["나는 다른 사람들과 함께 일하기를 더 좋아한다.","나의 관심사는 다른 사람들을 도와주는 것이다.","나는 사람들에게 칭찬을 잘 한다.","내 생각보다는 남의 생각에 공감할 때가 많다.","나는 친구들이 나에게 의지할 때 기분이 좋다.","나는 사람들을 관심 있게 대하고 보살피려 한다.","나는 사람들과 친해지려고 많이 노력하고 있다.","나는 타인의 만족을 위해 노력한다.","나는 타인의 호감을 얻기 위해 노력한다."]},
@@ -509,8 +545,8 @@ function showRadarChart() {
   $('clChartModal').classList.add('active');
 
   requestAnimationFrame(() => {
-    if (window._clChart) window._clChart.destroy();
-    window._clChart = new Chart($('clRadarChart'), {
+    if (_clChart) _clChart.destroy();
+    _clChart = new Chart($('clRadarChart'), {
       type: 'radar',
       data: {
         labels: sectionScores.map(s => s.title),
@@ -590,7 +626,7 @@ $('clSubmitBtn').addEventListener("click", function() {
 
 $('clChartCloseBtn').addEventListener('click', function() {
   $('clChartModal').classList.remove('active');
-  if (window._clChart) { window._clChart.destroy(); window._clChart = null; }
+  if (_clChart) { _clChart.destroy(); _clChart = null; }
   hideChecklist();
 });
 
